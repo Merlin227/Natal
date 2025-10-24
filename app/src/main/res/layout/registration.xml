@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:background="#000000"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegistrationActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="307dp"
+        android:layout_height="144dp"
+        android:background="#FFFFFF"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:text="Натальная карта: \n регистрация"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.071" />
+
+    <EditText
+        android:id="@+id/regTextName"
+        android:layout_width="320dp"
+        android:layout_height="32dp"
+        android:layout_margin="16dp"
+        android:background="#FFFFFF"
+        android:hint="Ваше имя"
+        android:textColor="#000000"
+        android:textColorHint="#80000000"
+
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.571"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499" />
+
+    <EditText
+        android:id="@+id/regTextLog"
+        android:layout_width="320dp"
+        android:layout_height="32dp"
+        android:layout_margin="16dp"
+        android:background="#FFFFFF"
+        android:hint="Логин"
+        android:textColor="#000000"
+
+        android:textColorHint="#80000000"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.571"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.34" />
+
+    <EditText
+        android:id="@+id/regTextPas"
+        android:layout_width="320dp"
+        android:layout_height="32dp"
+        android:layout_margin="16dp"
+        android:background="#FFFFFF"
+        android:hint="Пароль"
+        android:textColor="#000000"
+
+        android:textColorHint="#80000000"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.571"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.422" />
+
+    <EditText
+        android:id="@+id/regTextTime"
+        android:layout_width="320dp"
+        android:layout_height="32dp"
+        android:layout_margin="16dp"
+        android:background="#FFFFFF"
+        android:hint="Время рождения(00:00)"
+
+        android:textColor="#000000"
+        android:textColorHint="#80000000"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.549"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.652" />
+
+    <EditText
+        android:id="@+id/regTextDate"
+        android:layout_width="320dp"
+        android:layout_height="32dp"
+        android:layout_margin="16dp"
+        android:background="#FFFFFF"
+        android:hint="Дата рождения(00.00.0000)"
+
+        android:textColor="#000000"
+        android:textColorHint="#80000000"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.538"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.731" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="317dp"
+        android:layout_height="35dp"
+        android:background="#FFFFFF"
+        android:textColor="#000000"
+        android:textColorHint="#80000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.531"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.573" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
+        android:fontFamily="sans-serif-black"
+        android:text="Зарегестрироваться"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.834" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
+        android:fontFamily="sans-serif-black"
+        android:text="Вход"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.945" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

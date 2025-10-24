@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Natal</string>
+    <string-array name="spinner_items">
+        <item>Вариант 1</item>
+        <item>Вариант 2</item>
+        <item>Вариант 3</item>
+        <item>Вариант 4</item>
+        <item>Вариант 5</item>
+    </string-array>
+</resources>
