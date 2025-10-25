@@ -20,7 +20,6 @@ app.add_middleware(
 )
 
 
-# Модель данных
 class UserData(BaseModel):
     Name: str
     Password: str
