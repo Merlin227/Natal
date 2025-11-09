@@ -116,7 +116,7 @@ class AstrologyCalculator:
                 if planet_longitude is not None:
                     sign = self.get_zodiac_sign(planet_longitude)
                     house = self.calculate_house(planet_longitude, ascendant)
-                    print(sign, house, end='\n')
+                    #print(sign, house, end='\n')
                     cursor = con.cursor()
                     cursor.execute(
                         "SELECT interpretation from Planet_sign "
@@ -124,7 +124,7 @@ class AstrologyCalculator:
                         "join Signs on Signs.id_sign = Planet_sign.sign_id "
                         "where Signs.name = %s and Planets.planet_name = %s;",
                         (f'{sign}', f'{planet_ru}'))
-                    #Сгенерировать данные в бд для Planet_sign
+                    #переделать print_results под новый вид вывода перенести авторизацию/регестрацию на новую бд
 
 
                     results['planets_in_signs'].append({
@@ -134,10 +134,18 @@ class AstrologyCalculator:
                         'interpretation' : cursor.fetchall()
                     })
 
+                    cursor.execute(
+                        "SELECT interpretation from Planet_house "
+                        "join Planets on Planet_house.id_planet = Planets.id_planet "
+                        "join Houses on Houses.id_house = Planet_house.house_id "
+                        "where Houses.id_house = %s and Planets.planet_name = %s;",
+                        (f'{house}', f'{planet_ru}'))
+
                     results['planets_in_houses'].append({
                         'planet': planet_ru,
                         'house': self.houses_ru[house],
-                        'house_number': house
+                        'house_number': house,
+                        'interpretation': cursor.fetchall()
                     })
             except Exception as e:
                 print(f"Ошибка при расчёте {planet_ru}: {e}")
@@ -172,7 +180,7 @@ def main():
 
         results = calculator.calculate_astrology(birth_date, birth_time, latitude, longitude)
 
-        #print(results)
+        print(results)
 
     except ValueError as e:
         print(f"Ошибка ввода данных: {e}")
