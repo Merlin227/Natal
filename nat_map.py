@@ -155,14 +155,49 @@ class AstrologyCalculator:
         return results
 
     def print_results(self, results):
+        planets_data = []
 
+        # Создаем словарь для объединения данных по планетам
+        planets_dict = {}
+
+        # Обрабатываем планеты в знаках
         for planet_info in results['planets_in_signs']:
-            print(f"{planet_info['planet']:8} : {planet_info['sign']:10}")
+            planet_name = planet_info['planet']
+            planets_dict[planet_name] = {
+                'planetName': planet_name,
+                'zodiacSign': planet_info['sign'],
+                'housePosition': None,  # Пока неизвестно
+                'description': planet_info['interpretation'][0][0]
+            }
 
-        print("\n")
-
+        # Обрабатываем планеты в домах и объединяем данные
         for planet_info in results['planets_in_houses']:
-            print(f"{planet_info['planet']:12} : {planet_info['house']}")
+            planet_name = planet_info['planet']
+            if planet_name in planets_dict:
+                # Если планета уже есть в словаре, добавляем информацию о доме
+                planets_dict[planet_name]['housePosition'] = planet_info['house']
+            else:
+                # Если планеты нет в словаре (маловероятно, но на всякий случай)
+                planets_dict[planet_name] = {
+                    'planetName': planet_name,
+                    'zodiacSign': None,
+                    'housePosition': planet_info['house'],
+                    'description': planet_info['interpretation'][0][0]
+                }
+
+        # Преобразуем словарь в список
+        planets_data = list(planets_dict.values())
+
+        # Формируем финальный результат
+        output = {
+            "planets": planets_data
+        }
+
+        # Выводим в формате JSON
+        import json
+        print(json.dumps(output, ensure_ascii=False, indent=2))
+
+        return output
 
 
 def main():
@@ -178,9 +213,11 @@ def main():
         longitude = float(input("Долгота города рождения (например, 37.6173 для Москвы): "))
         datetime.strptime(birth_date + ' ' + birth_time, '%Y-%m-%d %H:%M:%S')
 
+        print("\n")
+
         results = calculator.calculate_astrology(birth_date, birth_time, latitude, longitude)
 
-        print(results)
+        calculator.print_results(results)
 
     except ValueError as e:
         print(f"Ошибка ввода данных: {e}")

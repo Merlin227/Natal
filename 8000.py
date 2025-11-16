@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import pymysql as mdb
+from nat_map import *
 from datetime import datetime
 from typing import List
 import api
@@ -41,14 +42,32 @@ class HoroscopeResponse(BaseModel):
     message: str
     horoscopes: List[HoroscopeData]
 
+class PlanetsRequest(BaseModel):
+    name: str
+    password: str
 
-# Подключение к базе данных
+class PlanetData(BaseModel):
+    planetName: str
+    zodiacSign: str
+    housePosition: str
+    description: str
+
+
+class PlanetsResponse(BaseModel):
+    status: str
+    message: str
+    planets: List[PlanetData]
+
+
+
+
+
 def get_connection():
     return mdb.connect(
         host="localhost",
         user="root",
         password="",
-        database="Natal",
+        database="zachet",
         autocommit=True
     )
 
@@ -60,7 +79,7 @@ async def receive_data(data: UserData):
         cursor = conn.cursor()
 
         cursor.execute(
-            "SELECT 1 from Userss where login = %s and pass = %s;",
+            "SELECT 1 from Users where login = %s and pass = %s;",
             (data.Name, data.Password))
         res = cursor.fetchall()
         if (res == ((1,),)):
@@ -94,7 +113,7 @@ async def registration(data: UserRegistration):
         cursor = conn.cursor()
 
         cursor.execute(
-            "SELECT 1 from Userss where name = %s;",
+            "SELECT 1 from Users where login = %s;",
             (data.Name))
         res = cursor.fetchall()
         if (res == ((1,),)):
@@ -108,9 +127,9 @@ async def registration(data: UserRegistration):
             }
         else:
             cursor.execute(
-                "INSERT INTO `Userss`(`login`, `pass`, `name`, `id_city`, `time_birthday`, `date_birthday`) "
-                "VALUES (%s, %s, %s, %s, %s, %s)",
-                (data.Login, data.Password, data.Name, data.Item1, data.BirthTime, data.BirthDate))
+                "INSERT INTO `Users`(`login`, `pass`, `id_city`, `time_birth`, `date_birth`) "
+                "VALUES (%s, %s, %s, %s, %s)",
+                (data.Login, data.Password, data.Item1, data.BirthTime, data.BirthDate))
             return {
                 "status": "True",
                 "message": f"Регестрация прошла успешно",
@@ -142,10 +161,7 @@ async def get_data():
 
 @app.get("/get-horoscopes", response_model=HoroscopeResponse)
 async def get_horoscopes():
-    # Получаем все гороскопы
     description = await api.get_all_horoscopes_async()
-
-    # Параллельный перевод всех текстов
     translated_texts = await api.translate_all_texts_async(description)
 
 
@@ -168,6 +184,33 @@ async def get_horoscopes():
             HoroscopeData(title="Рыбы", content=translated_texts['pisces'])
         ]
     )
+
+@app.get("/get-planets", response_model=PlanetsResponse)
+async def get_planets(data: PlanetsRequest):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT Users.date_birth, Users.time_birth, Cities.latitude, Cities.longitude "
+                       "FROM Users JOIN Cities ON Users.id_city = Cities.id_city "
+                       "WHERE Users.login = %s AND Users.pass = %s;",
+                       (data.name, data.password))
+        res = cursor.fetchall()
+        print(res)
+        calculator = AstrologyCalculator()
+        results = calculator.calculate_astrology(res[0][0], res[0][1], res[0][2], res[0][3])
+
+        return PlanetsResponse(
+            status="True",
+            message="Horoscopes retrieved successfully",
+            planets= [calculator.print_results(results)]
+        )
+
+
+    except Exception as e:
+        print(f"Ошибка базы данных: {e}")
+        raise HTTPException(status_code=500, detail=f"Ошибка сервера: {str(e)}")
+
 
 
 
