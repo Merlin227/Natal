@@ -33,7 +33,6 @@
         android:hint="Ваше имя"
         android:textColor="#000000"
         android:textColorHint="#80000000"
-
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -50,7 +49,6 @@
         android:background="#FFFFFF"
         android:hint="Логин"
         android:textColor="#000000"
-
         android:textColorHint="#80000000"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -68,7 +66,6 @@
         android:background="#FFFFFF"
         android:hint="Пароль"
         android:textColor="#000000"
-
         android:textColorHint="#80000000"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -78,17 +75,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.422" />
 
+    <!-- Компактный виджет для выбора времени (выглядит как EditText) -->
     <EditText
-        android:id="@+id/regTextTime"
+        android:id="@+id/timeEditText"
         android:layout_width="320dp"
         android:layout_height="32dp"
         android:layout_margin="16dp"
         android:background="#FFFFFF"
-        android:hint="Время рождения(00:00)"
-
+        android:hint="Время рождения (00:00:00)"
         android:textColor="#000000"
         android:textColorHint="#80000000"
         android:textSize="16sp"
+        android:focusable="false"
+        android:clickable="true"
+        android:cursorVisible="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.549"
@@ -96,13 +96,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.652" />
 
+    <!-- Компактный виджет для выбора даты (выглядит как EditText) -->
+
     <EditText
         android:id="@+id/regTextDate"
         android:layout_width="320dp"
         android:layout_height="32dp"
         android:layout_margin="16dp"
         android:background="#FFFFFF"
-        android:hint="Дата рождения(00.00.0000)"
+        android:hint="Дата рождения(00-00-0000)"
 
         android:textColor="#000000"
         android:textColorHint="#80000000"
@@ -127,6 +129,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.573" />
+
+
 
     <Button
         android:id="@+id/button"
@@ -157,6 +161,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.945" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

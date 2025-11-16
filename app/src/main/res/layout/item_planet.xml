@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#000000"
+    android:layout_margin="0dp"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/planetName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Солнце"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/zodiacSign"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Овен"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:layout_marginTop="4dp"/>
+
+    <TextView
+        android:id="@+id/housePosition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="1-й дом"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:layout_marginTop="2dp"/>
+
+    <TextView
+        android:id="@+id/planetDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Описание..."
+        android:textSize="14sp"
+        android:textColor="#CCCCCC"
+        android:lineSpacingExtra="4dp"
+        android:layout_marginTop="8dp"/>
+
+</LinearLayout>

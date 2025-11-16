@@ -27,7 +27,7 @@ class HoroscopeActivity : AppCompatActivity() {
 
         horoscopeContainer = findViewById(R.id.horoscopeContainer)
 
-        // Инициализация Retrofit (используем тот же baseUrl что в вашем примере)
+
         val retrofit = Retrofit.Builder()
             .baseUrl("https://consciously-replete-ox.cloudpub.ru/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -35,7 +35,7 @@ class HoroscopeActivity : AppCompatActivity() {
 
         val apiService = retrofit.create(HoroscopeApiService::class.java)
 
-        // Загрузка данных при открытии активности
+
         loadHoroscopes(apiService)
     }
 
@@ -90,19 +90,19 @@ class HoroscopeActivity : AppCompatActivity() {
 
     private fun setImageForHoroscope(title: String, imageView: ImageView) {
         val imageResId = when (title) {
-            "Весы" -> R.drawable.libra_icon
-            "Овен" -> R.drawable.libra_icon
-            "Телец" -> R.drawable.libra_icon
-            "Близнецы" -> R.drawable.libra_icon
-            "Рак" -> R.drawable.libra_icon
-            "Лев" -> R.drawable.libra_icon
-            "Дева" -> R.drawable.libra_icon
-            "Скорпион" -> R.drawable.libra_icon
-            "Стрелец" -> R.drawable.libra_icon
-            "Козерог" -> R.drawable.libra_icon
-            "Водолей" -> R.drawable.libra_icon
-            "Рыбы" -> R.drawable.libra_icon
-            else -> R.drawable.libra_icon
+            "Весы" -> R.drawable.libra
+            "Овен" -> R.drawable.aries
+            "Телец" -> R.drawable.taurus
+            "Близнецы" -> R.drawable.gemini
+            "Рак" -> R.drawable.cancer
+            "Лев" -> R.drawable.leo
+            "Дева" -> R.drawable.virgo
+            "Скорпион" -> R.drawable.scorpio
+            "Стрелец" -> R.drawable.sagit
+            "Козерог" -> R.drawable.cap
+            "Водолей" -> R.drawable.aqua
+            "Рыбы" -> R.drawable.pisces
+            else -> R.drawable.el
         }
 
         imageView.setImageResource(imageResId)
@@ -116,7 +116,7 @@ class HoroscopeActivity : AppCompatActivity() {
         horoscopeContainer.addView(errorView)
     }
 
-    // HoroscopeResponse.kt
+
     data class HoroscopeResponse(
         val status: String,
         val message: String,
@@ -128,7 +128,7 @@ class HoroscopeActivity : AppCompatActivity() {
         val content: String
     )
     interface HoroscopeApiService {
-        @GET("get-horoscopes") // или другой endpoint с вашего сервера
+        @GET("get-horoscopes")
         fun getHoroscopes(): Call<HoroscopeResponse>
     }
 

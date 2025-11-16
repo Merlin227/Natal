@@ -28,6 +28,10 @@
             android:exported="false"
             tools:ignore="Instantiatable" />
         <activity
+            android:name=".NatalActivity"
+            android:exported="false"
+            tools:ignore="Instantiatable" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

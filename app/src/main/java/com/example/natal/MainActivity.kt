@@ -64,6 +64,10 @@ class MainActivity : AppCompatActivity() {
                             editTextPassword.text.clear()
 
                             val intent = Intent(this@MainActivity, FirstActivity::class.java)
+
+                            intent.putExtra("EXTRA_MESSAGE1", name)
+                            intent.putExtra("EXTRA_MESSAGE2", password)
+
                             startActivity(intent)
 
                         } else {
@@ -101,7 +105,7 @@ data class UserData(
 )
 
 data class ApiResponse(
-    val status: String,  // Ожидаем "True" или "False"
+    val status: String,
     val message: String,
     val received_data: ReceivedData? = null
 ) {

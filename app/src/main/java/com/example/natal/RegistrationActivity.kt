@@ -32,8 +32,8 @@ class RegistrationActivity : AppCompatActivity() {
         val editTextPassword = findViewById<EditText>(R.id.regTextPas)
         val editTextName = findViewById<EditText>(R.id.regTextName)
         val editTextItem1 = findViewById<Spinner>(R.id.spinner)
-        val editTextBirthTime = findViewById<EditText>(R.id.regTextTime)
-        val editTextBirthDate = findViewById<EditText>(R.id.regTextDate)
+        val editTextBirthTime = findViewById<EditText>(R.id.timeEditText)
+        val editTextBirthDate = findViewById<EditText>(R.id.regTextDate )
         val buttonRegister = findViewById<Button>(R.id.button)
         val buttonLogin = findViewById<Button>(R.id.button2)
 
