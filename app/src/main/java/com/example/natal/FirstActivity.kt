@@ -43,6 +43,9 @@ class FirstActivity : AppCompatActivity() {
 
             intent2.putExtra("EXTRA_MESSAGE1", name)
             intent2.putExtra("EXTRA_MESSAGE2", password)
+            println("###########################################################################################################")
+            println(name)
+            println(password)
 
             startActivity(intent2)
         }

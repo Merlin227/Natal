@@ -121,7 +121,7 @@ class NatalActivity : AppCompatActivity() {
     )
 
     interface PlanetsApiService {
-        @GET("get-planets")
+        @POST("get-planets")
         fun getPlanets(@Body request: PlanetsRequest): Call<PlanetsResponse>
     }
 }
