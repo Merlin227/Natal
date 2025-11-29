@@ -160,24 +160,26 @@ class AstrologyCalculator:
         # Создаем словарь для объединения данных по планетам
         planets_dict = {}
 
-        # Обрабатываем планеты в знаках
+
         for planet_info in results['planets_in_signs']:
             planet_name = planet_info['planet']
             planets_dict[planet_name] = {
                 'planetName': planet_name,
                 'zodiacSign': planet_info['sign'],
-                'housePosition': None,  # Пока неизвестно
+                'housePosition': None,
                 'description': planet_info['interpretation'][0][0]
             }
 
-        # Обрабатываем планеты в домах и объединяем данные
+
         for planet_info in results['planets_in_houses']:
             planet_name = planet_info['planet']
             if planet_name in planets_dict:
-                # Если планета уже есть в словаре, добавляем информацию о доме
+                colon_index = planet_info['interpretation'][0][0].find(':')
+
                 planets_dict[planet_name]['housePosition'] = planet_info['house']
+                planets_dict[planet_name]['description'] = planet_info['interpretation'][0][0][:colon_index]+f"{planet_info['house']}"+planet_info['interpretation'][0][0][colon_index:]
             else:
-                # Если планеты нет в словаре (маловероятно, но на всякий случай)
+
                 planets_dict[planet_name] = {
                     'planetName': planet_name,
                     'zodiacSign': None,
@@ -185,15 +187,14 @@ class AstrologyCalculator:
                     'description': planet_info['interpretation'][0][0]
                 }
 
-        # Преобразуем словарь в список
+
         planets_data = list(planets_dict.values())
 
-        # Формируем финальный результат
-        output = {
-            "planets": planets_data
-        }
 
-        # Выводим в формате JSON
+        output =  planets_data
+
+
+
         import json
         print(json.dumps(output, ensure_ascii=False, indent=2))
 

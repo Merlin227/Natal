@@ -185,7 +185,7 @@ async def get_horoscopes():
         ]
     )
 
-@app.get("/get-planets", response_model=PlanetsResponse)
+@app.post("/get-planets", response_model=PlanetsResponse)
 async def get_planets(data: PlanetsRequest):
     try:
         conn = get_connection()
@@ -203,13 +203,42 @@ async def get_planets(data: PlanetsRequest):
         return PlanetsResponse(
             status="True",
             message="Horoscopes retrieved successfully",
-            planets= [calculator.print_results(results)]
+            planets= calculator.print_results(results)
         )
 
 
     except Exception as e:
         print(f"Ошибка базы данных: {e}")
         raise HTTPException(status_code=500, detail=f"Ошибка сервера: {str(e)}")
+
+# @app.post("/get-planets", response_model=PlanetsResponse)
+# async def get_planets(data: PlanetsRequest):
+#     try:
+#         # Временные тестовые данные
+#         test_planets = [
+#             {
+#                 "planetName": "Солнце",
+#                 "zodiacSign": "Лев",
+#                 "housePosition": "5 дом",
+#                 "description": "Описание Солнца"
+#             },
+#             {
+#                 "planetName": "Луна",
+#                 "zodiacSign": "Рак",
+#                 "housePosition": "4 дом",
+#                 "description": "Описание Луны"
+#             }
+#         ]
+#
+#         return PlanetsResponse(
+#             status="True",
+#             message="Planets data retrieved successfully",
+#             planets=test_planets
+#         )
+#
+#     except Exception as e:
+#         print(f"Ошибка: {e}")
+#         raise HTTPException(status_code=500, detail=f"Ошибка сервера: {str(e)}")
 
 
 
