@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Поле даты начала -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_start_date"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Дата начала"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/calendar"
+            app:endIconContentDescription="Выбрать дату"
+            app:placeholderText="ГГГГ-ММ-ДД"
+            app:endIconTint="@null">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextFlightStartDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:digits="0123456789-" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Поле даты окончания -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_end_date"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Дата окончания"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/calendar"
+            app:endIconContentDescription="Выбрать дату"
+            app:placeholderText="ГГГГ-ММ-ДД"
+            app:endIconTint="@null">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextFlightEndDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:digits="0123456789-" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Кнопка подтверждения -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Подтвердить"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            app:icon="@android:drawable/ic_menu_save"
+            app:iconGravity="textStart" />
+
+    </LinearLayout>
+</ScrollView>

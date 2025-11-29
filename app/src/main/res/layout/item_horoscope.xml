@@ -16,7 +16,7 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Изображение знака -->
+
         <ImageView
             android:id="@+id/horoscopeImage"
             android:layout_width="80dp"
@@ -25,7 +25,7 @@
             android:layout_marginBottom="16dp"
             android:scaleType="centerInside" />
 
-        <!-- Название знака -->
+
         <TextView
             android:id="@+id/horoscopeTitle"
             android:layout_width="match_parent"
@@ -37,14 +37,14 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <!-- Разделитель -->
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginBottom="12dp"
             android:background="#5B5B5B" />
 
-        <!-- Текст гороскопа -->
+
         <TextView
             android:id="@+id/horoscopeContent"
             android:layout_width="match_parent"

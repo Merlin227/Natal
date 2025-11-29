@@ -25,23 +25,6 @@
         app:layout_constraintVertical_bias="0.071" />
 
     <EditText
-        android:id="@+id/regTextName"
-        android:layout_width="320dp"
-        android:layout_height="32dp"
-        android:layout_margin="16dp"
-        android:background="#FFFFFF"
-        android:hint="Ваше имя"
-        android:textColor="#000000"
-        android:textColorHint="#80000000"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.571"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499" />
-
-    <EditText
         android:id="@+id/regTextLog"
         android:layout_width="320dp"
         android:layout_height="32dp"
@@ -76,45 +59,83 @@
         app:layout_constraintVertical_bias="0.422" />
 
     <!-- Компактный виджет для выбора времени (выглядит как EditText) -->
-    <EditText
-        android:id="@+id/timeEditText"
-        android:layout_width="320dp"
-        android:layout_height="32dp"
-        android:layout_margin="16dp"
-        android:background="#FFFFFF"
-        android:hint="Время рождения (00:00:00)"
-        android:textColor="#000000"
-        android:textColorHint="#80000000"
-        android:textSize="16sp"
-        android:focusable="false"
-        android:clickable="true"
-        android:cursorVisible="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.549"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.652" />
 
     <!-- Компактный виджет для выбора даты (выглядит как EditText) -->
 
-    <EditText
-        android:id="@+id/regTextDate"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_birth_time"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="320dp"
-        android:layout_height="32dp"
+        android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="#FFFFFF"
-        android:hint="Дата рождения(00-00-0000)"
+        android:background="#000000"
+        android:hint="Время рождения"
+        app:endIconContentDescription="Выбрать время"
+        app:endIconDrawable="@drawable/ic_time"
+        app:endIconMode="custom"
+        app:endIconTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.571"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.611"
+        app:placeholderText="00:00:00">
 
-        android:textColor="#000000"
-        android:textColorHint="#80000000"
-        android:textSize="16sp"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/timeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:clickable="true"
+            android:digits="0123456789:"
+            android:focusable="false"
+            android:hint="Время рождения (00:00:00)"
+            android:inputType="time"
+            android:minHeight="32dp"
+            android:textColor="#000000"
+            android:textColorHint="#80000000"
+            android:textSize="16sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_birth_date"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.538"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.731" />
+        app:layout_constraintVertical_bias="0.731"
+        android:hint="Дата рождения"
+        app:placeholderText="ГГГГ-ММ-ДД"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/calendar"
+        app:endIconContentDescription="Выбрать дату"
+        app:endIconTint="@null"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:background="#000000">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/regTextDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:clickable="true"
+            android:digits="0123456789-"
+            android:focusable="false"
+            android:hint="Дата рождения (ГГГГ-ММ-ДД)"
+            android:inputType="date"
+            android:minHeight="32dp"
+            android:textColor="#000000"
+            android:textColorHint="#80000000"
+            android:textSize="16sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <Spinner
         android:id="@+id/spinner"
@@ -127,10 +148,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.531"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.573" />
-
-
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button"
