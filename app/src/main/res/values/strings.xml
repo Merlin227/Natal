@@ -1,10 +1,46 @@
 <resources>
     <string name="app_name">Natal</string>
     <string-array name="spinner_items">
-        <item>Вариант 1</item>
-        <item>Вариант 2</item>
-        <item>Вариант 3</item>
-        <item>Вариант 4</item>
-        <item>Вариант 5</item>
+        <item>Москва</item>
+        <item>Санкт-Петербург</item>
+        <item>Новосибирск</item>
+        <item>Екатеринбург</item>
+        <item>Нижний Новгород</item>
+        <item>Казань</item>
+        <item>Челябинск</item>
+        <item>Омск</item>
+        <item>Самара</item>
+        <item>Ростов-на-Дону</item>
+        <item>Уфа</item>
+        <item>Красноярск</item>
+        <item>Воронеж</item>
+        <item>Пермь</item>
+        <item>Волгоград</item>
+        <item>Краснодар</item>
+        <item>Саратов</item>
+        <item>Тюмень</item>
+        <item>Тольятти</item>
+        <item>Ижевск</item>
+        <item>Барнаул</item>
+        <item>Ульяновск</item>
+        <item>Иркутск</item>
+        <item>Хабаровск</item>
+        <item>Ярославль</item>
+        <item>Владивосток</item>
+        <item>Махачкала</item>
+        <item>Томск</item>
+        <item>Оренбург</item>
+        <item>Кемерово</item>
+        <item>Новокузнецк</item>
+        <item>Рязань</item>
+        <item>Астрахань</item>
+        <item>Набережные Челны</item>
+        <item>Пенза</item>
+        <item>Липецк</item>
+        <item>Киров</item>
+        <item>Чебоксары</item>
+        <item>Тула</item>
+        <item>Калининград</item>
+        <item>Балашиха</item>
     </string-array>
 </resources>

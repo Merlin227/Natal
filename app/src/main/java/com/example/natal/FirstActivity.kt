@@ -28,6 +28,7 @@ class FirstActivity : AppCompatActivity() {
 
         val horoscopeButton = findViewById<Button>(R.id.button2)
         val natalButton = findViewById<Button>(R.id.button1)
+        val compatibility = findViewById<Button>(R.id.button3)
 
         horoscopeButton.setOnClickListener {
             val intent = Intent(this@FirstActivity, HoroscopeActivity::class.java)
@@ -43,11 +44,15 @@ class FirstActivity : AppCompatActivity() {
 
             intent2.putExtra("EXTRA_MESSAGE1", name)
             intent2.putExtra("EXTRA_MESSAGE2", password)
-            println("###########################################################################################################")
-            println(name)
-            println(password)
-
             startActivity(intent2)
+        }
+
+        compatibility.setOnClickListener {
+            val intent3 = Intent(this@FirstActivity, CompatibilityActivity::class.java)
+
+            intent3.putExtra("EXTRA_MESSAGE1", name)
+            intent3.putExtra("EXTRA_MESSAGE2", password)
+            startActivity(intent3)
         }
     }
 }

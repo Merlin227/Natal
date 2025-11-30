@@ -1,71 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="#000000"
+    tools:context=".FirstActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="#ffffff"
+        android:padding="20dp"
+        android:elevation="4dp"
+        tools:ignore="MissingConstraints">
 
-        <!-- Поле даты начала -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layout_start_date"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="Дата начала"
-            app:endIconMode="custom"
-            app:endIconDrawable="@drawable/calendar"
-            app:endIconContentDescription="Выбрать дату"
-            app:placeholderText="ГГГГ-ММ-ДД"
-            app:endIconTint="@null">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextFlightStartDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="date"
-                android:digits="0123456789-" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Поле даты окончания -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layout_end_date"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="Дата окончания"
-            app:endIconMode="custom"
-            app:endIconDrawable="@drawable/calendar"
-            app:endIconContentDescription="Выбрать дату"
-            app:placeholderText="ГГГГ-ММ-ДД"
-            app:endIconTint="@null">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextFlightEndDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="date"
-                android:digits="0123456789-" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Кнопка подтверждения -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonSubmit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Подтвердить"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            app:icon="@android:drawable/ic_menu_save"
-            app:iconGravity="textStart" />
+            android:text="Ввод данных\nдля совместимости"
+            android:background="#FFFFFF"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:gravity="center" />
 
     </LinearLayout>
-</ScrollView>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="32dp"
+        android:text="Введите дату рождения человека, с которым хотите проверить совместимость"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:lineSpacingExtra="4sp"
+        android:gravity="center"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_birth_date" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_birth_date"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="120dp"
+        android:background="#000000"
+        android:hint="Дата рождения"
+        app:endIconContentDescription="Выбрать дату"
+        app:endIconDrawable="@drawable/calendar"
+        app:endIconMode="custom"
+        app:endIconTint="@null"
+        app:boxStrokeColor="#000000"
+        app:boxStrokeWidth="1.5dp"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusTopStart="12dp"
+        app:hintTextColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderText="ГГГГ-ММ-ДД"
+        app:placeholderTextColor="#80000000">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/regTextDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:clickable="true"
+            android:digits="0123456789-"
+            android:focusable="false"
+            android:hint="Дата рождения (ГГГГ-ММ-ДД)"
+            android:inputType="date"
+            android:minHeight="48dp"
+            android:padding="16dp"
+            android:textColor="#000000"
+            android:textColorHint="#80000000"
+            android:textSize="16sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/button_compatibility"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="48dp"
+        android:backgroundTint="#FFFFFF"
+        android:fontFamily="sans-serif-black"
+        android:text="Продолжить"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:letterSpacing="0.02"
+        android:elevation="4dp"
+        android:paddingVertical="16dp"
+        app:cornerRadius="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

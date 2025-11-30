@@ -58,10 +58,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.422" />
 
-    <!-- Компактный виджет для выбора времени (выглядит как EditText) -->
-
-    <!-- Компактный виджет для выбора даты (выглядит как EditText) -->
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_birth_time"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -143,7 +139,7 @@
         android:layout_height="35dp"
         android:background="#FFFFFF"
         android:textColor="#000000"
-        android:textColorHint="#80000000"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.531"

@@ -16,7 +16,6 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-
         <ImageView
             android:id="@+id/horoscopeImage"
             android:layout_width="80dp"
@@ -25,7 +24,7 @@
             android:layout_marginBottom="16dp"
             android:scaleType="centerInside" />
 
-
+        <!-- Заголовок с золотым цветом -->
         <TextView
             android:id="@+id/horoscopeTitle"
             android:layout_width="match_parent"
@@ -33,26 +32,31 @@
             android:layout_marginBottom="12dp"
             android:gravity="center"
             android:text="Знак"
-            android:textColor="#ffffff"
+            android:textColor="#FFD700"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:letterSpacing="0.02" />
 
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginBottom="12dp"
-            android:background="#5B5B5B" />
+            android:background="#333333" />
 
 
         <TextView
             android:id="@+id/horoscopeContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lineSpacingExtra="4dp"
+            android:lineSpacingExtra="6dp"
             android:text="Текст гороскопа"
-            android:textColor="#ffffff"
-            android:textSize="14sp" />
+            android:textSize="15sp"
+            android:textColor="#E0E0E0"
+            android:padding="12dp"
+            android:background="#1A1A1A"
+            android:gravity="center"
+            android:layout_marginTop="8dp"/>
 
     </LinearLayout>
 

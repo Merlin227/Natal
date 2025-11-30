@@ -35,16 +35,16 @@ class RegistrationActivity : AppCompatActivity() {
         val editTextLogin = findViewById<EditText>(R.id.regTextLog)
         val editTextPassword = findViewById<EditText>(R.id.regTextPas)
         val editTextItem1 = findViewById<Spinner>(R.id.spinner)
-        val editTextBirthTime = findViewById<TextInputEditText>(R.id.timeEditText) // Изменен тип
+        val editTextBirthTime = findViewById<TextInputEditText>(R.id.timeEditText)
         val editTextBirthDate = findViewById<TextInputEditText>(R.id.regTextDate)
-        val birthTimeLayout = findViewById<TextInputLayout>(R.id.layout_birth_time) // Новый элемент
+        val birthTimeLayout = findViewById<TextInputLayout>(R.id.layout_birth_time)
         val birthDateLayout = findViewById<TextInputLayout>(R.id.layout_birth_date)
         val buttonRegister = findViewById<Button>(R.id.button)
         val buttonLogin = findViewById<Button>(R.id.button2)
 
         setupSpinner(editTextItem1)
         setupDateInput(editTextBirthDate, birthDateLayout)
-        setupTimeInput(editTextBirthTime, birthTimeLayout) // Настройка времени
+        setupTimeInput(editTextBirthTime, birthTimeLayout)
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://consciously-replete-ox.cloudpub.ru/")
@@ -79,6 +79,9 @@ class RegistrationActivity : AppCompatActivity() {
                         val result = response.body()!!
 
                         if (result.status == "True") {
+
+                            val name = editTextLogin.text.toString()
+                            val password = editTextPassword.text.toString()
                             Toast.makeText(this@RegistrationActivity, "Успешная регистрация!", Toast.LENGTH_SHORT).show()
 
                             editTextLogin.text.clear()
@@ -87,6 +90,10 @@ class RegistrationActivity : AppCompatActivity() {
 
 
                             val intent = Intent(this@RegistrationActivity, FirstActivity::class.java)
+
+                            intent.putExtra("EXTRA_MESSAGE1", name)
+                            intent.putExtra("EXTRA_MESSAGE2", password)
+
                             startActivity(intent)
 
                         } else {
@@ -119,7 +126,7 @@ class RegistrationActivity : AppCompatActivity() {
         spinner.adapter = adapter
     }
 
-    // --- МЕТОД ДЛЯ НАСТРОЙКИ ВВОДА ДАТЫ ---
+
     private fun setupDateInput(dateEditText: TextInputEditText, dateLayout: TextInputLayout) {
         addDateMask(dateEditText)
 
@@ -132,7 +139,7 @@ class RegistrationActivity : AppCompatActivity() {
         }
     }
 
-    // --- МЕТОД ДЛЯ НАСТРОЙКИ ВВОДА ВРЕМЕНИ ---
+
     private fun setupTimeInput(timeEditText: TextInputEditText, timeLayout: TextInputLayout) {
         addTimeMask(timeEditText)
 
@@ -145,7 +152,7 @@ class RegistrationActivity : AppCompatActivity() {
         }
     }
 
-    // --- МАСКА ВВОДА ДЛЯ ДАТЫ ---
+
     private fun addDateMask(editText: TextInputEditText) {
         editText.addTextChangedListener(object : TextWatcher {
             private var isUpdating = false
@@ -182,7 +189,7 @@ class RegistrationActivity : AppCompatActivity() {
         })
     }
 
-    // --- МАСКА ВВОДА ДЛЯ ВРЕМЕНИ ---
+
     private fun addTimeMask(editText: TextInputEditText) {
         editText.addTextChangedListener(object : TextWatcher {
             private var isUpdating = false
@@ -195,7 +202,7 @@ class RegistrationActivity : AppCompatActivity() {
 
                 val cleanString = s.toString().replace(":", "")
 
-                // Ограничиваем длину (6 цифр = ЧЧММСС)
+
                 if (cleanString.length > 6) {
                     isUpdating = true
                     editText.setText(cleanString.substring(0, 6))
@@ -204,7 +211,7 @@ class RegistrationActivity : AppCompatActivity() {
                     return
                 }
 
-                // Форматируем строку с двоеточиями
+
                 val formattedText = StringBuilder()
                 for (i in cleanString.indices) {
                     formattedText.append(cleanString[i])
@@ -213,7 +220,7 @@ class RegistrationActivity : AppCompatActivity() {
                     }
                 }
 
-                // Автоматически добавляем недостающие нули
+
                 if (cleanString.isNotEmpty() && cleanString.length < 6) {
                     when (cleanString.length) {
                         1 -> if (cleanString.toInt() > 2) formattedText.append(":00:00")
@@ -280,20 +287,20 @@ class RegistrationActivity : AppCompatActivity() {
                 val selectedTime = Calendar.getInstance()
                 selectedTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
                 selectedTime.set(Calendar.MINUTE, minute)
-                selectedTime.set(Calendar.SECOND, 0) // Устанавливаем секунды в 0
+                selectedTime.set(Calendar.SECOND, 0)
 
                 val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
                 timeEditText.setText(timeFormat.format(selectedTime.time))
             },
             calendar.get(Calendar.HOUR_OF_DAY),
             calendar.get(Calendar.MINUTE),
-            true // 24-часовой формат
+            true
         )
         timePickerDialog.show()
     }
 }
 
-// Остальные data class и интерфейсы остаются без изменений
+
 data class UserDate(
     val Login: String,
     val Password: String,
