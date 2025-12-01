@@ -6,9 +6,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.Button
-import android.widget.Toast
+import android.view.Gravity
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import retrofit2.Call
@@ -21,31 +23,40 @@ import retrofit2.http.POST
 import java.text.SimpleDateFormat
 import java.util.*
 
-
-
 class CompatibilityActivity : AppCompatActivity() {
 
     private lateinit var birthDateEditText: TextInputEditText
     private lateinit var birthDateLayout: TextInputLayout
     private lateinit var buttonCompatibility: Button
 
+
+    private lateinit var resultCardView: CardView
+    private lateinit var percentageTextView: TextView
+    private lateinit var descriptionTextView: TextView
+    private lateinit var closeResultButton: Button
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_compatibility)
-
 
         birthDateEditText = findViewById(R.id.regTextDate)
         birthDateLayout = findViewById(R.id.layout_birth_date)
         buttonCompatibility = findViewById(R.id.button_compatibility)
 
 
+        resultCardView = findViewById(R.id.resultCardView)
+        percentageTextView = findViewById(R.id.percentageTextView)
+        descriptionTextView = findViewById(R.id.descriptionTextView)
+        closeResultButton = findViewById(R.id.closeResultButton)
+
         val username = intent.getStringExtra("EXTRA_MESSAGE1") ?: ""
         val password = intent.getStringExtra("EXTRA_MESSAGE2") ?: ""
 
-
         setupDateInput()
 
+
+        resultCardView.visibility = View.GONE
 
         buttonCompatibility.setOnClickListener {
             val birthDate = birthDateEditText.text.toString()
@@ -55,26 +66,28 @@ class CompatibilityActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-
             if (!isValidDateFormat(birthDate)) {
                 Toast.makeText(this, "Неверный формат даты. Используйте ГГГГ-ММ-ДД", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-
             sendCompatibilityData(username, password, birthDate)
+        }
+
+
+        closeResultButton.setOnClickListener {
+            resultCardView.visibility = View.GONE
+
+            birthDateEditText.text?.clear()
         }
     }
 
     private fun setupDateInput() {
-
         addDateMask(birthDateEditText)
-
 
         birthDateLayout.setEndIconOnClickListener {
             showDatePickerDialog()
         }
-
 
         birthDateEditText.setOnClickListener {
             showDatePickerDialog()
@@ -93,7 +106,6 @@ class CompatibilityActivity : AppCompatActivity() {
 
                 val cleanString = s.toString().replace("-", "")
 
-
                 if (cleanString.length > 8) {
                     isUpdating = true
                     editText.setText(cleanString.substring(0, 8))
@@ -101,7 +113,6 @@ class CompatibilityActivity : AppCompatActivity() {
                     isUpdating = false
                     return
                 }
-
 
                 val formattedText = StringBuilder()
                 for (i in cleanString.indices) {
@@ -148,6 +159,10 @@ class CompatibilityActivity : AppCompatActivity() {
     }
 
     private fun sendCompatibilityData(username: String, password: String, partnerBirthDate: String) {
+
+        buttonCompatibility.text = "Загрузка..."
+        buttonCompatibility.isEnabled = false
+
         val retrofit = Retrofit.Builder()
             .baseUrl("https://consciously-replete-ox.cloudpub.ru/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -163,14 +178,26 @@ class CompatibilityActivity : AppCompatActivity() {
 
         apiService.sendCompatibilityData(compatibilityData).enqueue(object : Callback<CompatibilityResponse> {
             override fun onResponse(call: Call<CompatibilityResponse>, response: Response<CompatibilityResponse>) {
+
+                buttonCompatibility.text = "Продолжить"
+                buttonCompatibility.isEnabled = true
+
                 if (response.isSuccessful && response.body() != null) {
                     val result = response.body()!!
 
                     if (result.status == "True") {
-                        Toast.makeText(this@CompatibilityActivity, "Данные успешно отправлены!", Toast.LENGTH_SHORT).show()
+                        val compatibilityResult = result.compatibility_result
 
+                        if (compatibilityResult != null) {
 
-
+                            showCompatibilityResult(
+                                compatibilityResult.percentage ?: 0,
+                                compatibilityResult.description ?: "Описание отсутствует"
+                            )
+                            Toast.makeText(this@CompatibilityActivity, "Расчет выполнен успешно!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this@CompatibilityActivity, "Результат не получен", Toast.LENGTH_SHORT).show()
+                        }
                     } else {
                         Toast.makeText(this@CompatibilityActivity, "Ошибка: ${result.message}", Toast.LENGTH_SHORT).show()
                     }
@@ -180,9 +207,33 @@ class CompatibilityActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<CompatibilityResponse>, t: Throwable) {
+
+                buttonCompatibility.text = "Продолжить"
+                buttonCompatibility.isEnabled = true
+
                 Toast.makeText(this@CompatibilityActivity, "Ошибка сети: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun showCompatibilityResult(percentage: Int, description: String) {
+
+        percentageTextView.text = "$percentage%"
+        descriptionTextView.text = description
+
+
+        val color = when {
+            percentage >= 80 -> "#4CAF50"
+            percentage >= 60 -> "#FFC107"
+            percentage >= 40 -> "#FF9800"
+            else -> "#F44336" //
+        }
+
+        percentageTextView.setTextColor(android.graphics.Color.parseColor(color))
+
+
+        resultCardView.visibility = View.VISIBLE
+        resultCardView.bringToFront()
     }
 }
 
@@ -193,18 +244,16 @@ data class CompatibilityData(
     val partner_birth_date: String
 )
 
-
 data class CompatibilityResponse(
     val status: String,
     val message: String,
     val compatibility_result: CompatibilityResult? = null
-) {
-    data class CompatibilityResult(
-        val score: Int?,
-        val description: String?
-    )
-}
+)
 
+data class CompatibilityResult(
+    val percentage: Int?,
+    val description: String?
+)
 
 interface CompatibilityApiService {
     @POST("compatibility")

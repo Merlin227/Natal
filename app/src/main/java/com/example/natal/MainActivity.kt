@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         val editTextName = findViewById<EditText>(R.id.editTextName)
         val editTextPassword = findViewById<EditText>(R.id.editTextPassword)
         val sendButtonLogin = findViewById<Button>(R.id.loginButton)
-        val resultTextView = findViewById<TextView>(R.id.textView4)
+
         val registerButton = findViewById<Button>(R.id.registerButton)
 
         val retrofit = Retrofit.Builder()
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
 
 
                         if (result.status == "True") {
-                            resultTextView.text = "Успешный вход!"
+
                             Toast.makeText(this@MainActivity, "Успешный вход!", Toast.LENGTH_SHORT).show()
 
                             editTextName.text.clear()
@@ -71,16 +71,14 @@ class MainActivity : AppCompatActivity() {
                             startActivity(intent)
 
                         } else {
-                            resultTextView.text = "Ошибка входа: ${result.message}"
+
                             Toast.makeText(this@MainActivity, "Неверные данные", Toast.LENGTH_SHORT).show()
                         }
-                    } else {
-                        resultTextView.text = "Ошибка сервера: ${response.code()}"
                     }
                 }
 
                 override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                    resultTextView.text = "Ошибка сети: ${t.message}"
+
                     Toast.makeText(this@MainActivity, "Проверьте подключение", Toast.LENGTH_SHORT).show()
                 }
             })

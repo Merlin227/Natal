@@ -3,177 +3,243 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="#000000"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient"
+    android:padding="24dp"
     tools:context=".RegistrationActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="307dp"
-        android:layout_height="144dp"
-        android:background="#FFFFFF"
-        android:fontFamily="sans-serif"
+    <!-- Заголовок -->
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
         android:gravity="center"
-        android:text="Натальная карта: \n регистрация"
-        android:textSize="30sp"
-        android:textStyle="bold"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_zodiac_circle"
+            app:tint="#FFFFFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="НАТАЛЬНАЯ КАРТА"
+            android:textColor="#80FFFFFF"
+            android:textSize="14sp"
+            android:letterSpacing="0.1"
+            android:textAllCaps="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:text="Регистрация"
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp" />
+    </LinearLayout>
+
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:layout_marginTop="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.071" />
+        app:layout_constraintTop_toBottomOf="@+id/header">
 
-    <EditText
-        android:id="@+id/regTextLog"
-        android:layout_width="320dp"
-        android:layout_height="32dp"
-        android:layout_margin="16dp"
-        android:background="#FFFFFF"
-        android:hint="Логин"
-        android:textColor="#000000"
-        android:textColorHint="#80000000"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.571"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.34" />
-
-    <EditText
-        android:id="@+id/regTextPas"
-        android:layout_width="320dp"
-        android:layout_height="32dp"
-        android:layout_margin="16dp"
-        android:background="#FFFFFF"
-        android:hint="Пароль"
-        android:textColor="#000000"
-        android:textColorHint="#80000000"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.571"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.422" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layout_birth_time"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="320dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="#000000"
-        android:hint="Время рождения"
-        app:endIconContentDescription="Выбрать время"
-        app:endIconDrawable="@drawable/ic_time"
-        app:endIconMode="custom"
-        app:endIconTint="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.571"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.611"
-        app:placeholderText="00:00:00">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/timeEditText"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            android:clickable="true"
-            android:digits="0123456789:"
-            android:focusable="false"
-            android:hint="Время рождения (00:00:00)"
-            android:inputType="time"
-            android:minHeight="32dp"
-            android:textColor="#000000"
-            android:textColorHint="#80000000"
-            android:textSize="16sp" />
+            android:orientation="vertical"
+            android:padding="8dp">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <!-- Поле логина -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/loginInputLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="     Логин"
+                app:boxBackgroundColor="#1AFFFFFF"
+                app:boxStrokeColor="#80FFFFFF"
+                app:endIconMode="clear_text"
+                app:endIconTint="#FFFFFF"
+                app:hintTextColor="#B3FFFFFF"
+                app:startIconDrawable="@drawable/ic_person"
+                app:startIconTint="#FFFFFF">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layout_birth_date"
-        android:layout_width="320dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.538"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.731"
-        android:hint="Дата рождения"
-        app:placeholderText="ГГГГ-ММ-ДД"
-        app:endIconMode="custom"
-        app:endIconDrawable="@drawable/calendar"
-        app:endIconContentDescription="Выбрать дату"
-        app:endIconTint="@null"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:background="#000000">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/regTextLog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/regTextDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            android:clickable="true"
-            android:digits="0123456789-"
-            android:focusable="false"
-            android:hint="Дата рождения (ГГГГ-ММ-ДД)"
-            android:inputType="date"
-            android:minHeight="32dp"
-            android:textColor="#000000"
-            android:textColorHint="#80000000"
-            android:textSize="16sp" />
+            <!-- Поле пароля -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordInputLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="    Пароль"
+                app:boxBackgroundColor="#1AFFFFFF"
+                app:boxStrokeColor="#80FFFFFF"
+                app:endIconMode="password_toggle"
+                app:endIconTint="#FFFFFF"
+                app:hintTextColor="#B3FFFFFF"
+                app:startIconDrawable="@drawable/ic_lock"
+                app:startIconTint="#FFFFFF">
 
-    </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/regTextPas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="317dp"
-        android:layout_height="35dp"
-        android:background="#FFFFFF"
-        android:textColor="#000000"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/cityContainer"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Город рождения"
+                app:boxBackgroundColor="#1AFFFFFF"
+                app:boxStrokeColor="#80FFFFFF"
+                app:endIconMode="dropdown_menu"
+                app:endIconTint="#FFFFFF"
+                app:hintTextColor="#B3FFFFFF"
+                app:startIconDrawable="@drawable/ic_location"
+                app:startIconTint="#FFFFFF">
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.531"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:minHeight="56dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:spinnerMode="dropdown"
+                    android:textColor="#FFFFFF" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
-        android:fontFamily="sans-serif-black"
-        android:text="Зарегестрироваться"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.834" />
+            <!-- Дата рождения -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layout_birth_date"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="      Дата рождения"
+                app:boxBackgroundColor="#1AFFFFFF"
+                app:boxStrokeColor="#80FFFFFF"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_calendar"
+                app:endIconTint="#FFFFFF"
+                app:hintTextColor="#B3FFFFFF"
+                app:startIconDrawable="@drawable/ic_cake"
+                app:startIconTint="#FFFFFF">
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
-        android:fontFamily="sans-serif-black"
-        android:text="Вход"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.945" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/regTextDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:inputType="date"
+                    android:focusable="false"
+                    android:clickable="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Время рождения -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layout_birth_time"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="     Время рождения"
+                app:boxBackgroundColor="#1AFFFFFF"
+                app:boxStrokeColor="#80FFFFFF"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_time"
+                app:endIconTint="#FFFFFF"
+                app:hintTextColor="#B3FFFFFF"
+                app:startIconDrawable="@drawable/ic_clock"
+                app:startIconTint="#FFFFFF">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/timeEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:inputType="time"
+                    android:focusable="false"
+                    android:clickable="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Кнопки -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Зарегистрироваться"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_user_add"
+                app:iconPadding="8dp"
+                app:iconGravity="textStart"
+                style="@style/Widget.Material3.Button"
+                android:backgroundTint="#FFFFFF"
+                android:textColor="#302B63"
+                android:layout_marginTop="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button2"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Уже есть аккаунт? Войти"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_login"
+                app:iconPadding="8dp"
+                app:iconGravity="textStart"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                app:strokeColor="#FFFFFF"
+                app:strokeWidth="1dp"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="?attr/colorSurface"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="16dp" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

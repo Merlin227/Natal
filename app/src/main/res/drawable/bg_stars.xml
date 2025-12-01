@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="1200dp"
+    android:height="1200dp"
+    android:viewportWidth="1200"
+    android:viewportHeight="1200">
+
+    <path
+        android:fillColor="#0F0C29"
+        android:pathData="M0,0h1200v1200h-1200z" />
+
+    <!-- Звезды -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.3"
+        android:pathData="M100,100l5,0l0,5l-5,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.4"
+        android:pathData="M300,200l3,0l0,3l-3,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.5"
+        android:pathData="M500,150l2,0l0,2l-2,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.3"
+        android:pathData="M700,300l4,0l0,4l-4,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.4"
+        android:pathData="M900,250l3,0l0,3l-3,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.5"
+        android:pathData="M1100,180l2,0l0,2l-2,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.3"
+        android:pathData="M200,400l5,0l0,5l-5,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.4"
+        android:pathData="M400,500l3,0l0,3l-3,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.5"
+        android:pathData="M600,450l2,0l0,2l-2,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.3"
+        android:pathData="M800,600l4,0l0,4l-4,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.4"
+        android:pathData="M1000,550l3,0l0,3l-3,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.5"
+        android:pathData="M150,700l2,0l0,2l-2,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.3"
+        android:pathData="M350,800l5,0l0,5l-5,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.4"
+        android:pathData="M550,750l3,0l0,3l-3,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.5"
+        android:pathData="M750,900l2,0l0,2l-2,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.3"
+        android:pathData="M950,850l4,0l0,4l-4,0z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.4"
+        android:pathData="M1150,950l3,0l0,3l-3,0z" />
+
+    <!-- Созвездия -->
+    <path
+        android:strokeColor="#FF6B6B"
+        android:strokeWidth="1"
+        android:pathData="M300,400l50,-30" />
+    <path
+        android:strokeColor="#4ECDC4"
+        android:strokeWidth="1"
+        android:pathData="M600,800l40,40" />
+    <path
+        android:strokeColor="#FFD166"
+        android:strokeWidth="1"
+        android:pathData="M900,500l-30,60" />
+</vector>
