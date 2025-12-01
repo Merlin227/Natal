@@ -4,14 +4,15 @@ from fastapi.middleware.cors import CORSMiddleware
 import pymysql as mdb
 from nat_map import *
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 import api
 import aiohttp
 import asyncio
+from compatibility import *
 
 app = FastAPI()
 
-# Настройки CORS
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -20,6 +21,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+class CompatibilityResult(BaseModel):
+    score: Optional[int] = None
+    description: Optional[str] = None
+
+class CompatibilityResponse(BaseModel):
+    status: str
+    message: str
+    compatibility_result: Optional[CompatibilityResult]
+
+class CompatibilityData(BaseModel):
+    login: str
+    password: str
+    partner_birth_date: str
 
 class UserData(BaseModel):
     Name: str
@@ -28,7 +42,6 @@ class UserData(BaseModel):
 class UserRegistration(BaseModel):
     Login: str
     Password: str
-    Name: str
     Item1: str
     BirthTime: str
     BirthDate: str
@@ -59,9 +72,6 @@ class PlanetsResponse(BaseModel):
     planets: List[PlanetData]
 
 
-
-
-
 def get_connection():
     return mdb.connect(
         host="localhost",
@@ -83,7 +93,7 @@ async def receive_data(data: UserData):
             (data.Name, data.Password))
         res = cursor.fetchall()
         if (res == ((1,),)):
-            print(res)
+
             return {
                 "status": "True",
                 "message": f"Пользователь {data.Name} вошёл в систему.",
@@ -114,7 +124,7 @@ async def registration(data: UserRegistration):
 
         cursor.execute(
             "SELECT 1 from Users where login = %s;",
-            (data.Name))
+            (data.Login))
         res = cursor.fetchall()
         if (res == ((1,),)):
             return {
@@ -128,7 +138,7 @@ async def registration(data: UserRegistration):
         else:
             cursor.execute(
                 "INSERT INTO `Users`(`login`, `pass`, `id_city`, `time_birth`, `date_birth`) "
-                "VALUES (%s, %s, %s, %s, %s)",
+                "VALUES (%s, %s, (select Cities.id_city from Cities where Cities.name = %s), %s, %s)",
                 (data.Login, data.Password, data.Item1, data.BirthTime, data.BirthDate))
             return {
                 "status": "True",
@@ -190,6 +200,7 @@ async def get_planets(data: PlanetsRequest):
     try:
         conn = get_connection()
         cursor = conn.cursor()
+        print(data.name, data.password)
 
         cursor.execute("SELECT Users.date_birth, Users.time_birth, Cities.latitude, Cities.longitude "
                        "FROM Users JOIN Cities ON Users.id_city = Cities.id_city "
@@ -211,35 +222,16 @@ async def get_planets(data: PlanetsRequest):
         print(f"Ошибка базы данных: {e}")
         raise HTTPException(status_code=500, detail=f"Ошибка сервера: {str(e)}")
 
-# @app.post("/get-planets", response_model=PlanetsResponse)
-# async def get_planets(data: PlanetsRequest):
-#     try:
-#         # Временные тестовые данные
-#         test_planets = [
-#             {
-#                 "planetName": "Солнце",
-#                 "zodiacSign": "Лев",
-#                 "housePosition": "5 дом",
-#                 "description": "Описание Солнца"
-#             },
-#             {
-#                 "planetName": "Луна",
-#                 "zodiacSign": "Рак",
-#                 "housePosition": "4 дом",
-#                 "description": "Описание Луны"
-#             }
-#         ]
-#
-#         return PlanetsResponse(
-#             status="True",
-#             message="Planets data retrieved successfully",
-#             planets=test_planets
-#         )
-#
-#     except Exception as e:
-#         print(f"Ошибка: {e}")
-#         raise HTTPException(status_code=500, detail=f"Ошибка сервера: {str(e)}")
+@app.post("/compatibility", response_model=CompatibilityResponse)
+async def compatibility(data: CompatibilityData):
+    print(numerology_compatibility(data.partner_birth_date))
+    # добавить вторую дату
 
+    return CompatibilityResponse(
+                status="True",
+                message="Расчет совместимости выполнен успешно",
+                compatibility_result=None
+            )
 
 
 

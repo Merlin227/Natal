@@ -155,17 +155,24 @@ class AstrologyCalculator:
         return results
 
     def print_results(self, results):
-        planets_data = []
-
-        # Создаем словарь для объединения данных по планетам
         planets_dict = {}
-
+        cursor = con.cursor()
 
         for planet_info in results['planets_in_signs']:
             planet_name = planet_info['planet']
+
+            cursor.execute(
+                "SELECT general_meaning from Planets where planet_name = %s;",
+                (f'{planet_name}'))
+            des_planet = cursor.fetchall()[0][0]
+            cursor.execute(
+                "SELECT description from Signs where name = %s;",
+                (f'{planet_info["sign"]}'))
+            des_sign = cursor.fetchall()[0][0]
+
             planets_dict[planet_name] = {
-                'planetName': planet_name,
-                'zodiacSign': planet_info['sign'],
+                'planetName': planet_name + f" ({des_planet})",
+                'zodiacSign': planet_info['sign'] + f" ({des_sign})",
                 'housePosition': None,
                 'description': planet_info['interpretation'][0][0]
             }
@@ -176,10 +183,21 @@ class AstrologyCalculator:
             if planet_name in planets_dict:
                 colon_index = planet_info['interpretation'][0][0].find(':')
 
-                planets_dict[planet_name]['housePosition'] = planet_info['house']
-                planets_dict[planet_name]['description'] = planet_info['interpretation'][0][0][:colon_index]+f"{planet_info['house']}"+planet_info['interpretation'][0][0][colon_index:]
-            else:
+                zodiac_sign = planets_dict[planet_name]['zodiacSign']
 
+                cursor.execute(
+                    "SELECT description from Houses where id_house = %s;",
+                    (f'{planet_info["house"][0]}'))
+                des_house = cursor.fetchall()[0][0]
+
+                planets_dict[planet_name]['housePosition'] = planet_info['house']+ f" ({des_house})"
+                planets_dict[planet_name]['description'] = (
+                        planet_info['interpretation'][0][0][:colon_index] +
+                        " "+
+                        f"{zodiac_sign.split()[0]}" +
+                        planet_info['interpretation'][0][0][colon_index:]
+                )
+            else:
                 planets_dict[planet_name] = {
                     'planetName': planet_name,
                     'zodiacSign': None,
@@ -187,13 +205,8 @@ class AstrologyCalculator:
                     'description': planet_info['interpretation'][0][0]
                 }
 
-
         planets_data = list(planets_dict.values())
-
-
-        output =  planets_data
-
-
+        output = planets_data
 
         import json
         print(json.dumps(output, ensure_ascii=False, indent=2))
