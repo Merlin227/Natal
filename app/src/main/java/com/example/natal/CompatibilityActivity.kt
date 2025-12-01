@@ -32,21 +32,21 @@ class CompatibilityActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_compatibility) // Убедитесь, что ваш XML файл называется activity_first.xml
+        setContentView(R.layout.activity_compatibility)
 
-        // Инициализация элементов
+
         birthDateEditText = findViewById(R.id.regTextDate)
         birthDateLayout = findViewById(R.id.layout_birth_date)
         buttonCompatibility = findViewById(R.id.button_compatibility)
 
-        // Получаем переданные данные из RegistrationActivity
+
         val username = intent.getStringExtra("EXTRA_MESSAGE1") ?: ""
         val password = intent.getStringExtra("EXTRA_MESSAGE2") ?: ""
 
-        // Настройка ввода даты
+
         setupDateInput()
 
-        // Обработчик кнопки "Продолжить"
+
         buttonCompatibility.setOnClickListener {
             val birthDate = birthDateEditText.text.toString()
 
@@ -55,27 +55,27 @@ class CompatibilityActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Проверка формата даты (ГГГГ-ММ-ДД)
+
             if (!isValidDateFormat(birthDate)) {
                 Toast.makeText(this, "Неверный формат даты. Используйте ГГГГ-ММ-ДД", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Отправка данных на сервер
+
             sendCompatibilityData(username, password, birthDate)
         }
     }
 
     private fun setupDateInput() {
-        // Добавляем маску ввода даты
+
         addDateMask(birthDateEditText)
 
-        // Обработчик клика по иконке календаря
+
         birthDateLayout.setEndIconOnClickListener {
             showDatePickerDialog()
         }
 
-        // Обработчик клика по самому полю ввода
+
         birthDateEditText.setOnClickListener {
             showDatePickerDialog()
         }
@@ -93,7 +93,7 @@ class CompatibilityActivity : AppCompatActivity() {
 
                 val cleanString = s.toString().replace("-", "")
 
-                // Ограничиваем длину (8 цифр = ГГГГММДД)
+
                 if (cleanString.length > 8) {
                     isUpdating = true
                     editText.setText(cleanString.substring(0, 8))
@@ -102,7 +102,7 @@ class CompatibilityActivity : AppCompatActivity() {
                     return
                 }
 
-                // Форматируем строку с дефисами
+
                 val formattedText = StringBuilder()
                 for (i in cleanString.indices) {
                     formattedText.append(cleanString[i])
@@ -169,10 +169,7 @@ class CompatibilityActivity : AppCompatActivity() {
                     if (result.status == "True") {
                         Toast.makeText(this@CompatibilityActivity, "Данные успешно отправлены!", Toast.LENGTH_SHORT).show()
 
-                        // Здесь можно перейти к следующему экрану с результатами совместимости
-                        // val intent = Intent(this@FirstActivity, ResultActivity::class.java)
-                        // intent.putExtra("COMPATIBILITY_RESULT", result.message)
-                        // startActivity(intent)
+
 
                     } else {
                         Toast.makeText(this@CompatibilityActivity, "Ошибка: ${result.message}", Toast.LENGTH_SHORT).show()
@@ -189,16 +186,16 @@ class CompatibilityActivity : AppCompatActivity() {
     }
 }
 
-// Data класс для отправки данных совместимости
+
 data class CompatibilityData(
     val login: String,
     val password: String,
     val partner_birth_date: String
 )
 
-// Data класс для ответа от сервера
+
 data class CompatibilityResponse(
-    val status: String,  // "True" или "False"
+    val status: String,
     val message: String,
     val compatibility_result: CompatibilityResult? = null
 ) {
@@ -208,8 +205,8 @@ data class CompatibilityResponse(
     )
 }
 
-// Интерфейс для API совместимости
+
 interface CompatibilityApiService {
-    @POST("compatibility") // Замените на ваш endpoint для совместимости
+    @POST("compatibility")
     fun sendCompatibilityData(@Body compatibilityData: CompatibilityData): Call<CompatibilityResponse>
 }
