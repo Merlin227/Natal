@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import retrofit2.Call
@@ -26,7 +25,6 @@ class MainActivity : AppCompatActivity() {
         val editTextName = findViewById<EditText>(R.id.editTextName)
         val editTextPassword = findViewById<EditText>(R.id.editTextPassword)
         val sendButtonLogin = findViewById<Button>(R.id.loginButton)
-
         val registerButton = findViewById<Button>(R.id.registerButton)
 
         val retrofit = Retrofit.Builder()
@@ -45,6 +43,22 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Проверка на администратора
+            if (name == "admin" && password == "admin") {
+                // Администраторский вход
+                Toast.makeText(this, "Вход как администратор", Toast.LENGTH_SHORT).show()
+
+                // Открываем другое окно для администратора
+                val adminIntent = Intent(this@MainActivity, AdminActivity::class.java)
+                adminIntent.putExtra("ADMIN_MODE", true)
+                startActivity(adminIntent)
+
+                editTextName.text.clear()
+                editTextPassword.text.clear()
+                return@setOnClickListener
+            }
+
+
             val userData = UserData(
                 Name = name,
                 Password = password
@@ -55,30 +69,24 @@ class MainActivity : AppCompatActivity() {
                     if (response.isSuccessful && response.body() != null) {
                         val result = response.body()!!
 
-
                         if (result.status == "True") {
-
                             Toast.makeText(this@MainActivity, "Успешный вход!", Toast.LENGTH_SHORT).show()
 
                             editTextName.text.clear()
                             editTextPassword.text.clear()
 
                             val intent = Intent(this@MainActivity, FirstActivity::class.java)
-
                             intent.putExtra("EXTRA_MESSAGE1", name)
                             intent.putExtra("EXTRA_MESSAGE2", password)
-
                             startActivity(intent)
 
                         } else {
-
                             Toast.makeText(this@MainActivity, "Неверные данные", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
 
                 override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-
                     Toast.makeText(this@MainActivity, "Проверьте подключение", Toast.LENGTH_SHORT).show()
                 }
             })
@@ -95,7 +103,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-
 
 data class UserData(
     val Name: String,
