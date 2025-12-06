@@ -74,6 +74,28 @@ class PlanetsResponse(BaseModel):
     message: str
     planets: List[PlanetData]
 
+class DeleteUserRequest(BaseModel):
+    user_id: int
+    admin_login: str
+    admin_password: str
+
+class UserResponse(BaseModel):
+    id: int
+    login: str
+    passw: str
+    id_city: int
+    time_birth: str
+    date_birth: str
+
+class UsersListResponse(BaseModel):
+    status: str
+    message: str
+    users: List[UserResponse]
+
+class AdminAuth(BaseModel):
+    admin_login: str
+    admin_password: str
+
 
 def get_connection():
     return mdb.connect(
@@ -246,10 +268,123 @@ async def compatibility(data: CompatibilityData):
         raise HTTPException(status_code=500, detail=f"Ошибка сервера: {str(e)}")
 
 
+@app.get("/get-all-users")
+async def get_all_users():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT Users.id_user, Users.login, Users.pass, Cities.name, Users.time_birth, Users.date_birth 
+            FROM Users join Cities on Users.id_city = Cities.id_city 
+            ORDER BY id_user;
+        """)
+
+        records = cursor.fetchall()
+
+        users_list = []
+        for record in records:
+            user_dict = {
+                "id_user": record[0],
+                "login": record[1],
+                "pass": record[2],
+                "id_city": record[3],
+                "time_birth": record[4],
+                "date_birth": record[5]
+            }
+            users_list.append(user_dict)
+
+        return {
+            "status": "True",
+            "message": f"Найдено {len(users_list)} пользователей",
+            "users": users_list
+        }
+
+    except Exception as e:
+        print(f"Ошибка базы данных: {e}")
+        raise HTTPException(status_code=500, detail=f"Ошибка сервера: {str(e)}")
 
 
+@app.post("/get-user-details")
+async def get_user_details(data: UserData):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT Users.*, Cities.name as city_name 
+            FROM Users 
+            LEFT JOIN Cities ON Users.id_city = Cities.id_city 
+            WHERE Users.login = %s
+        """, (data.Name,))
+
+        result = cursor.fetchone()
+
+        if result:
+            return {
+                "status": "True",
+                "message": "Данные пользователя получены",
+                "user_data": {
+                    "id": result[0],
+                    "login": result[1],
+                    "password": result[2],
+                    "id_city": result[3],
+                    "city_name": result[6],
+                    "time_birth": result[4],
+                    "date_birth": result[5]
+                }
+            }
+        else:
+            return {
+                "status": "False",
+                "message": "Пользователь не найден"
+            }
+
+    except Exception as e:
+        print(f"Ошибка базы данных: {e}")
+        raise HTTPException(status_code=500, detail=f"Ошибка сервера: {str(e)}")
 
 
+@app.post("/delete-user")
+async def delete_user(data: DeleteUserRequest):
+    try:
+        # Проверка прав администратора
+        if data.admin_login != "admin" or data.admin_password != "admin":
+            return {
+                "status": "False",
+                "message": "Недостаточно прав для удаления пользователя"
+            }
+
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        # Сначала проверяем, существует ли пользователь
+        cursor.execute("SELECT 1 FROM Users WHERE id_user = %s", (data.user_id,))
+        user_exists = cursor.fetchone()
+
+        if not user_exists:
+            return {
+                "status": "False",
+                "message": f"Пользователь с ID {data.user_id} не найден"
+            }
+
+        # Удаляем пользователя
+        cursor.execute("DELETE FROM Users WHERE id_user = %s", (data.user_id,))
+
+        if cursor.rowcount > 0:
+            return {
+                "status": "True",
+                "message": f"Пользователь с ID {data.user_id} успешно удален"
+            }
+        else:
+            return {
+                "status": "False",
+                "message": f"Не удалось удалить пользователя с ID {data.user_id}"
+            }
+
+    except Exception as e:
+        print(f"Ошибка базы данных при удалении пользователя: {e}")
+        raise HTTPException(status_code=500, detail=f"Ошибка сервера: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn
