@@ -2,6 +2,7 @@ package com.example.natal
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.view.LayoutInflater
@@ -12,7 +13,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
 
 class NatalActivity : AppCompatActivity() {
@@ -22,9 +22,15 @@ class NatalActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_natal)
+        setContentView(R.layout.activity_natal) // Убедитесь, что это правильное имя файла
 
+        // Находим кнопку назад
+        val buttonBack = findViewById<ImageButton>(R.id.buttonBack)
 
+        // Обработка нажатия на кнопку назад
+        buttonBack.setOnClickListener {
+            finish() // Закрываем текущую Activity и возвращаемся назад
+        }
 
         planetsContainer = findViewById(R.id.natalContainer)
 
@@ -38,7 +44,6 @@ class NatalActivity : AppCompatActivity() {
         val name = intent.getStringExtra("EXTRA_MESSAGE1") ?: "user"
         val password = intent.getStringExtra("EXTRA_MESSAGE2") ?: "pass"
 
-
         loadPlanets(apiService, name, password)
     }
 
@@ -51,7 +56,6 @@ class NatalActivity : AppCompatActivity() {
                     val planetsResponse = response.body()!!
 
                     if (planetsResponse.status == "True") {
-
                         displayPlanets(planetsResponse.planets)
                     } else {
                         showError("Ошибка: ${planetsResponse.message}")
@@ -73,15 +77,12 @@ class NatalActivity : AppCompatActivity() {
         val inflater = LayoutInflater.from(this)
 
         planets.forEach { planet ->
-
             val planetItem = inflater.inflate(R.layout.item_planet, planetsContainer, false)
-
 
             val planetNameTextView = planetItem.findViewById<TextView>(R.id.planetName)
             val zodiacSignTextView = planetItem.findViewById<TextView>(R.id.zodiacSign)
             val housePositionTextView = planetItem.findViewById<TextView>(R.id.housePosition)
             val descriptionTextView = planetItem.findViewById<TextView>(R.id.planetDescription)
-
 
             planetNameTextView.text = planet.planetName
             zodiacSignTextView.text = planet.zodiacSign ?: "Не указано"
@@ -101,7 +102,7 @@ class NatalActivity : AppCompatActivity() {
         planetsContainer.addView(errorView)
     }
 
-
+    // Data классы
     data class PlanetsRequest(
         val name: String,
         val password: String
@@ -125,4 +126,3 @@ class NatalActivity : AppCompatActivity() {
         fun getPlanets(@Body request: PlanetsRequest): Call<PlanetsResponse>
     }
 }
-

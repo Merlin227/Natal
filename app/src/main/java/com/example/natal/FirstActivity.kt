@@ -4,17 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.ImageButton
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.POST
+import androidx.activity.OnBackPressedCallback
 
 class FirstActivity : AppCompatActivity() {
 
@@ -29,19 +22,21 @@ class FirstActivity : AppCompatActivity() {
         val horoscopeButton = findViewById<Button>(R.id.button2)
         val natalButton = findViewById<Button>(R.id.button1)
         val compatibility = findViewById<Button>(R.id.button3)
+        val exitButton = findViewById<ImageButton>(R.id.buttonExit)
+
+        exitButton.setOnClickListener {
+            showExitConfirmationDialog()
+        }
 
         horoscopeButton.setOnClickListener {
             val intent = Intent(this@FirstActivity, HoroscopeActivity::class.java)
-
             intent.putExtra("EXTRA_MESSAGE1", name)
             intent.putExtra("EXTRA_MESSAGE2", password)
-
             startActivity(intent)
         }
 
         natalButton.setOnClickListener {
             val intent2 = Intent(this@FirstActivity, NatalActivity::class.java)
-
             intent2.putExtra("EXTRA_MESSAGE1", name)
             intent2.putExtra("EXTRA_MESSAGE2", password)
             startActivity(intent2)
@@ -49,10 +44,36 @@ class FirstActivity : AppCompatActivity() {
 
         compatibility.setOnClickListener {
             val intent3 = Intent(this@FirstActivity, CompatibilityActivity::class.java)
-
             intent3.putExtra("EXTRA_MESSAGE1", name)
             intent3.putExtra("EXTRA_MESSAGE2", password)
             startActivity(intent3)
         }
+
+        // Новый способ обработки кнопки "Назад"
+        setupBackPressedHandler()
+    }
+
+    private fun setupBackPressedHandler() {
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showExitConfirmationDialog()
+            }
+        }
+
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+    }
+
+    private fun showExitConfirmationDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Выход из приложения")
+            .setMessage("Вы уверены, что хотите выйти?")
+            .setPositiveButton("Да") { dialog, which ->
+                finishAffinity()
+            }
+            .setNegativeButton("Отмена") { dialog, which ->
+                dialog.dismiss()
+            }
+            .setCancelable(true)
+            .show()
     }
 }

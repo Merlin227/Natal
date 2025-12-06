@@ -2,11 +2,9 @@ package com.example.natal
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Gravity
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +26,7 @@ class CompatibilityActivity : AppCompatActivity() {
     private lateinit var birthDateEditText: TextInputEditText
     private lateinit var birthDateLayout: TextInputLayout
     private lateinit var buttonCompatibility: Button
-
+    private lateinit var buttonBack: ImageButton
 
     private lateinit var resultCardView: CardView
     private lateinit var percentageTextView: TextView
@@ -40,10 +38,17 @@ class CompatibilityActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_compatibility)
 
+        // Находим кнопку назад
+        buttonBack = findViewById(R.id.buttonBack)
+
+        // Обработка нажатия на кнопку назад
+        buttonBack.setOnClickListener {
+            finish() // Закрываем текущую Activity и возвращаемся назад
+        }
+
         birthDateEditText = findViewById(R.id.regTextDate)
         birthDateLayout = findViewById(R.id.layout_birth_date)
         buttonCompatibility = findViewById(R.id.button_compatibility)
-
 
         resultCardView = findViewById(R.id.resultCardView)
         percentageTextView = findViewById(R.id.percentageTextView)
@@ -54,7 +59,6 @@ class CompatibilityActivity : AppCompatActivity() {
         val password = intent.getStringExtra("EXTRA_MESSAGE2") ?: ""
 
         setupDateInput()
-
 
         resultCardView.visibility = View.GONE
 
@@ -74,10 +78,8 @@ class CompatibilityActivity : AppCompatActivity() {
             sendCompatibilityData(username, password, birthDate)
         }
 
-
         closeResultButton.setOnClickListener {
             resultCardView.visibility = View.GONE
-
             birthDateEditText.text?.clear()
         }
     }
@@ -159,7 +161,6 @@ class CompatibilityActivity : AppCompatActivity() {
     }
 
     private fun sendCompatibilityData(username: String, password: String, partnerBirthDate: String) {
-
         buttonCompatibility.text = "Загрузка..."
         buttonCompatibility.isEnabled = false
 
@@ -178,7 +179,6 @@ class CompatibilityActivity : AppCompatActivity() {
 
         apiService.sendCompatibilityData(compatibilityData).enqueue(object : Callback<CompatibilityResponse> {
             override fun onResponse(call: Call<CompatibilityResponse>, response: Response<CompatibilityResponse>) {
-
                 buttonCompatibility.text = "Продолжить"
                 buttonCompatibility.isEnabled = true
 
@@ -189,7 +189,6 @@ class CompatibilityActivity : AppCompatActivity() {
                         val compatibilityResult = result.compatibility_result
 
                         if (compatibilityResult != null) {
-
                             showCompatibilityResult(
                                 compatibilityResult.percentage ?: 0,
                                 compatibilityResult.description ?: "Описание отсутствует"
@@ -207,7 +206,6 @@ class CompatibilityActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<CompatibilityResponse>, t: Throwable) {
-
                 buttonCompatibility.text = "Продолжить"
                 buttonCompatibility.isEnabled = true
 
@@ -217,26 +215,22 @@ class CompatibilityActivity : AppCompatActivity() {
     }
 
     private fun showCompatibilityResult(percentage: Int, description: String) {
-
         percentageTextView.text = "$percentage%"
         descriptionTextView.text = description
-
 
         val color = when {
             percentage >= 80 -> "#4CAF50"
             percentage >= 60 -> "#FFC107"
             percentage >= 40 -> "#FF9800"
-            else -> "#F44336" //
+            else -> "#F44336"
         }
 
         percentageTextView.setTextColor(android.graphics.Color.parseColor(color))
-
 
         resultCardView.visibility = View.VISIBLE
         resultCardView.bringToFront()
     }
 }
-
 
 data class CompatibilityData(
     val login: String,

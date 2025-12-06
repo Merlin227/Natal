@@ -1,8 +1,8 @@
-// HoroscopeActivity.kt
 package com.example.natal
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.ImageView
@@ -13,7 +13,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.POST
 import retrofit2.http.GET
 
 class HoroscopeActivity : AppCompatActivity() {
@@ -25,8 +24,15 @@ class HoroscopeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_horoscope)
 
-        horoscopeContainer = findViewById(R.id.horoscopeContainer)
+        // Находим кнопку назад
+        val buttonBack = findViewById<ImageButton>(R.id.buttonBack)
 
+        // Обработка нажатия на кнопку назад
+        buttonBack.setOnClickListener {
+            finish() // Закрываем текущую Activity и возвращаемся назад
+        }
+
+        horoscopeContainer = findViewById(R.id.horoscopeContainer)
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://consciously-replete-ox.cloudpub.ru/")
@@ -34,7 +40,6 @@ class HoroscopeActivity : AppCompatActivity() {
             .build()
 
         val apiService = retrofit.create(HoroscopeApiService::class.java)
-
 
         loadHoroscopes(apiService)
     }
@@ -46,10 +51,8 @@ class HoroscopeActivity : AppCompatActivity() {
                     val horoscopeResponse = response.body()!!
 
                     if (horoscopeResponse.status == "True") {
-                        // Успешно получили данные - отображаем их
                         displayHoroscopes(horoscopeResponse.horoscopes)
                     } else {
-                        // Ошибка от сервера
                         showError("Ошибка: ${horoscopeResponse.message}")
                     }
                 } else {
@@ -69,19 +72,15 @@ class HoroscopeActivity : AppCompatActivity() {
         val inflater = LayoutInflater.from(this)
 
         horoscopes.forEach { horoscope ->
-            // Создаем элемент для каждого гороскопа
             val horoscopeItem = inflater.inflate(R.layout.item_horoscope, horoscopeContainer, false)
 
-            // Находим элементы в макете
             val imageView = horoscopeItem.findViewById<ImageView>(R.id.horoscopeImage)
             val titleTextView = horoscopeItem.findViewById<TextView>(R.id.horoscopeTitle)
             val contentTextView = horoscopeItem.findViewById<TextView>(R.id.horoscopeContent)
 
-            // Устанавливаем данные
             titleTextView.text = horoscope.title
             contentTextView.text = horoscope.content
 
-            // Устанавливаем изображение в зависимости от заголовка
             setImageForHoroscope(horoscope.title, imageView)
 
             horoscopeContainer.addView(horoscopeItem)
@@ -116,7 +115,6 @@ class HoroscopeActivity : AppCompatActivity() {
         horoscopeContainer.addView(errorView)
     }
 
-
     data class HoroscopeResponse(
         val status: String,
         val message: String,
@@ -127,9 +125,9 @@ class HoroscopeActivity : AppCompatActivity() {
         val title: String,
         val content: String
     )
+
     interface HoroscopeApiService {
         @GET("get-horoscopes")
         fun getHoroscopes(): Call<HoroscopeResponse>
     }
-
 }
