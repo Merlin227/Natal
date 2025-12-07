@@ -23,6 +23,14 @@ class FirstActivity : AppCompatActivity() {
         val natalButton = findViewById<Button>(R.id.button1)
         val compatibility = findViewById<Button>(R.id.button3)
         val exitButton = findViewById<ImageButton>(R.id.buttonExit)
+        val communityButton = findViewById<Button>(R.id.communityButton)
+
+        communityButton.setOnClickListener {
+            val intent = Intent(this@FirstActivity, CommunityActivity::class.java)
+            intent.putExtra("EXTRA_MESSAGE1", name)
+            intent.putExtra("EXTRA_MESSAGE2", password)
+            startActivity(intent)
+        }
 
         exitButton.setOnClickListener {
             showExitConfirmationDialog()

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="0dp"
+    android:paddingEnd="0dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp">
+
+    <!-- Основной комментарий -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="1dp"
+        app:cardBackgroundColor="#F8F8F8"
+        android:layout_marginBottom="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- Автор и время -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/commentAuthor"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Автор"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"/>
+
+                <TextView
+                    android:id="@+id/commentTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5 мин назад"
+                    android:textSize="12sp"
+                    android:textColor="#888888"/>
+
+            </LinearLayout>
+
+            <!-- Текст комментария -->
+            <TextView
+                android:id="@+id/commentContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Текст комментария..."
+                android:textSize="16sp"
+                android:textColor="#000000"
+                android:lineSpacingExtra="2dp"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Панель действий -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Лайки -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="12dp">
+
+                    <ImageButton
+                        android:id="@+id/commentUpvoteButton"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_thumb_up_small"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Лайк"/>
+
+                    <TextView
+                        android:id="@+id/commentUpvotes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="12sp"
+                        android:textColor="#000000"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_gravity="center_vertical"/>
+
+                    <ImageButton
+                        android:id="@+id/commentDownvoteButton"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_thumb_down_small"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Дизлайк"/>
+
+                    <TextView
+                        android:id="@+id/commentDownvotes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="12sp"
+                        android:textColor="#000000"
+                        android:layout_marginStart="2dp"
+                        android:layout_gravity="center_vertical"/>
+
+                </LinearLayout>
+
+                <!-- Кнопка ответа -->
+                <Button
+                    android:id="@+id/replyButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ответить"
+                    android:textSize="12sp"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:backgroundTint="#E0E0E0"
+                    android:textColor="#666666"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Ответы (вложенные комментарии) -->
+    <LinearLayout
+        android:id="@+id/repliesContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="16dp">
+        <!-- Ответы будут добавляться программно -->
+    </LinearLayout>
+
+</LinearLayout>

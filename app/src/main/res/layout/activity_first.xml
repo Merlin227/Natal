@@ -8,6 +8,23 @@
     tools:context=".FirstActivity">
 
 
+    <Button
+        android:id="@+id/communityButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
+        android:fontFamily="sans-serif-black"
+        android:text="Сообщество"
+        android:textColor="#000000"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.468"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.612"
+        tools:ignore="MissingConstraints" />
+
     <ImageButton
         android:id="@+id/buttonExit"
         android:layout_width="48dp"
@@ -24,8 +41,8 @@
 
     <ImageView
         android:id="@+id/myImage"
-        android:layout_width="279dp"
-        android:layout_height="422dp"
+        android:layout_width="237dp"
+        android:layout_height="359dp"
         android:src="@drawable/image_1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

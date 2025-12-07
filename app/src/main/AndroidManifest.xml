@@ -39,6 +39,16 @@
             android:name=".AdminActivity"
             android:exported="false" />
         <activity
+            android:name=".CommunityActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PostDetailActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".CreatePostActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateVisible" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
