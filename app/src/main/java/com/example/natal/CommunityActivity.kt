@@ -32,7 +32,7 @@ class CommunityActivity : AppCompatActivity() {
     private var totalPages = 1
     private var isLoading = false
 
-    // Данные пользователя
+
     private lateinit var currentUsername: String
     private lateinit var currentPassword: String
 

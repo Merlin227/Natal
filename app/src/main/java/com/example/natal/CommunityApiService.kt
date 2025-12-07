@@ -55,9 +55,6 @@ interface CommunityApiService {
     ): Call<CommunityResponse<VoteResponse>>
 }
 
-// УДАЛИТЬ ВСЕ МОДЕЛИ ИЗ ЭТОГО ФАЙЛА, так как они уже в CommunityModels.kt
-// Оставить только CreateCategoryRequest если его нет в CommunityModels
-
 data class CreateCategoryRequest(
     val name: String,
     val description: String
