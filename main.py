@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from pymysql.cursors import DictCursor
 import pymysql as mdb
 from nat_map import *
 from datetime import datetime
@@ -187,7 +188,7 @@ def verify_user(login: str, password: str):
 
 # Простая функция для получения текущего пользователя (заглушка)
 async def get_current_user():
-    """Временная заглушка - возвращает тестового пользователя"""
+
 
     class MockUser:
         def __init__(self):
@@ -555,20 +556,21 @@ async def get_posts(category_id: Optional[int] = None,
     try:
         offset = (page - 1) * limit
 
-        sort_query = {
-            "new": "ORDER BY p.created_at DESC",
-            "hot": "ORDER BY (p.upvotes - p.downvotes) DESC, p.created_at DESC",
-            "top": "ORDER BY p.upvotes DESC"
-        }.get(sort_by, "ORDER BY p.created_at DESC")
+        sort_mapping = {
+            "new": "p.created_at DESC",
+            "hot": "(COALESCE(p.upvotes, 0) - COALESCE(p.downvotes, 0)) DESC, p.created_at DESC",
+            "top": "COALESCE(p.upvotes, 0) DESC"
+        }
+        order_by = sort_mapping.get(sort_by, "p.created_at DESC")
 
         conn = get_connection()
         cursor = conn.cursor()
 
-        # Проверяем существование таблиц
-        cursor.execute("SHOW TABLES LIKE 'Posts'")
+        # Проверяем существование таблицы posts
+        cursor.execute("SHOW TABLES LIKE 'posts'")
         if not cursor.fetchone():
             return {
-                "status": "True",
+                "status": "False",  # Изменено на строку
                 "message": "Таблица постов не создана",
                 "posts": [],
                 "pagination": {
@@ -579,7 +581,8 @@ async def get_posts(category_id: Optional[int] = None,
                 }
             }
 
-        count_query = "SELECT COUNT(*) FROM Posts p WHERE p.is_approved = TRUE OR p.is_approved IS NULL"
+        # Подсчет общего количества постов
+        count_query = "SELECT COUNT(*) FROM posts p WHERE (p.is_approved = 1 OR p.is_approved IS NULL)"
         count_params = []
 
         if category_id:
@@ -590,50 +593,69 @@ async def get_posts(category_id: Optional[int] = None,
         total_posts = cursor.fetchone()[0]
         total_pages = (total_posts + limit - 1) // limit if total_posts > 0 else 0
 
-        query = f"""
-            SELECT p.id, p.title, p.content, p.user_id, p.category_id, 
-           p.created_at, p.updated_at, p.comment_count, p.is_approved,
-           u.login as author_name, c.name as category_name,
-           COALESCE(p.upvotes, 0) as upvotes,
-           COALESCE(p.downvotes, 0) as downvotes
-            FROM Posts p
+
+        query = """
+            SELECT 
+                p.id, 
+                p.title, 
+                p.content, 
+                p.user_id, 
+                p.category_id, 
+                p.created_at, 
+                p.updated_at, 
+                p.comment_count, 
+                p.is_approved,
+                p.upvotes,
+                p.downvotes,
+                u.login as author_name, 
+                c.name as category_name
+            FROM posts p
             JOIN Users u ON p.user_id = u.id_user
             JOIN Categories c ON p.category_id = c.id
-            WHERE p.is_approved = TRUE OR p.is_approved IS NULL
-            {"AND p.category_id = %s" if category_id else ""}
-            {sort_query}
+            
+            ORDER BY {order_by}
             LIMIT %s OFFSET %s
         """
 
         params = []
+        category_filter = ""
+
         if category_id:
+            category_filter = "AND p.category_id = %s"
             params.append(category_id)
+
+        query = query.format(category_filter=category_filter, order_by=order_by)
         params.extend([limit, offset])
 
         cursor.execute(query, params)
         posts = cursor.fetchall()
 
+
+        formatted_posts = []
+        for post in posts:
+            formatted_posts.append({
+                "id": post[0],
+                "title": post[1],
+                "content": post[2],
+                "user_id": post[3],
+                "category_id": post[4],
+                "created_at": post[5].strftime("%Y-%m-%d %H:%M:%S") if post[5] else None,
+                "updated_at": post[6].strftime("%Y-%m-%d %H:%M:%S") if post[6] else None,
+                "comment_count": post[7] or 0,
+                "is_approved": bool(post[8]) if post[8] is not None else True,
+                "upvotes": post[9] or 0,
+                "downvotes": post[10] or 0,
+                "author_name": post[11] or "Неизвестный",
+                "category_name": post[12] or "Без категории"
+            })
+        print(formatted_posts)
+        cursor.close()
+        conn.close()
+
         return {
-            "status": "True",
-            "message": f"Найдено {len(posts)} постов",
-            "posts": [
-                {
-                    "id": p[0],
-                    "title": p[1],
-                    "content": p[2],
-                    "user_id": p[3],
-                    "category_id": p[4],
-                    "created_at": p[5].strftime("%Y-%m-%d %H:%M:%S") if p[5] else None,
-                    "updated_at": p[6].strftime("%Y-%m-%d %H:%M:%S") if p[6] else None,
-                    "comment_count": p[7] if p[7] else 0,
-                    "is_approved": p[8] if p[8] else True,
-                    "author_name": p[9] if p[9] else "Неизвестный",
-                    "category_name": p[10] if p[10] else "Без категории",
-                    "upvotes": p[11] if p[11] else 0,
-                    "downvotes": p[12] if p[12] else 0
-                }
-                for p in posts
-            ],
+            "status": "True",  # Изменено на строку
+            "message": f"Найдено {len(formatted_posts)} постов",
+            "posts": formatted_posts,
             "pagination": {
                 "page": page,
                 "limit": limit,
@@ -645,7 +667,7 @@ async def get_posts(category_id: Optional[int] = None,
     except Exception as e:
         print(f"Ошибка базы данных: {e}")
         return {
-            "status": "False",
+            "status": "False",  # Изменено на строку
             "message": f"Ошибка сервера: {str(e)}",
             "posts": [],
             "pagination": {
