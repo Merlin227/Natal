@@ -174,6 +174,7 @@ class CommunityActivity : AppCompatActivity() {
                 if (response.isSuccessful && response.body()?.status == "True") {
                     categories = response.body()?.data ?: response.body()?.categories ?: emptyList()
 
+
                     // Обновляем спиннер
                     val categoryNames = mutableListOf("Все категории")
                     categoryNames.addAll(categories.map { it.name })

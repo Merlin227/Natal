@@ -1,4 +1,3 @@
-// PostDetailActivity.kt
 package com.example.natal
 
 import android.annotation.SuppressLint
@@ -44,11 +43,9 @@ class PostDetailActivity : AppCompatActivity() {
         username = intent.getStringExtra("USERNAME") ?: ""
         password = intent.getStringExtra("PASSWORD") ?: ""
 
-
         initViews()
         setupRecyclerView()
         setupClickListeners()
-
 
         loadPost()
         loadComments()
@@ -63,7 +60,6 @@ class PostDetailActivity : AppCompatActivity() {
         commentEditText = findViewById(R.id.commentEditText)
         backButton = findViewById(R.id.buttonBack)
 
-        // Кнопка назад
         backButton.setOnClickListener { finish() }
     }
 
@@ -91,17 +87,28 @@ class PostDetailActivity : AppCompatActivity() {
                     val body = response.body()
 
                     if (body?.status == "True") {
-                        val post = body.post ?: body.data
+                        // ВАЖНО: Используем data, а не post
+                        val post = body.data ?: body.post
                         post?.let {
                             postTitle.text = it.title
                             postAuthor.text = "Автор: ${it.authorName}"
                             postContent.text = it.content
+                        } ?: run {
+                            Toast.makeText(this@PostDetailActivity, "Данные поста не получены", Toast.LENGTH_SHORT).show()
                         }
+                    } else {
+                        Toast.makeText(this@PostDetailActivity, body?.message ?: "Ошибка загрузки", Toast.LENGTH_SHORT).show()
                     }
+                } else {
+                    Toast.makeText(this@PostDetailActivity, "HTTP ошибка: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    // Для отладки
+                    println("Error response: ${response.errorBody()?.string()}")
                 }
             }
+
             override fun onFailure(call: Call<CommunityResponse<Post>>, t: Throwable) {
-                Toast.makeText(this@PostDetailActivity, "Ошибка загрузки поста", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@PostDetailActivity, "Ошибка сети: ${t.message}", Toast.LENGTH_SHORT).show()
+                t.printStackTrace()
             }
         })
     }
@@ -114,7 +121,8 @@ class PostDetailActivity : AppCompatActivity() {
                     val body = response.body()
 
                     if (body?.status == "True") {
-                        val comments = body.comments ?: body.data ?: emptyList()
+                        // Используем data вместо comments
+                        val comments = body.data ?: body.comments ?: emptyList()
                         commentsAdapter.updateComments(comments)
                     }
                 }

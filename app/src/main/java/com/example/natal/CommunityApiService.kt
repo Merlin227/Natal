@@ -36,6 +36,7 @@ interface CommunityApiService {
     @GET("community/posts/{post_id}")
     fun getPost(@Path("post_id") postId: Int): Call<CommunityResponse<Post>>
 
+
     @POST("community/posts")
     fun createPost(@Body request: CreatePostRequest): Call<CommunityResponse<Int>>
 

@@ -47,13 +47,23 @@ data class Post(
     @SerializedName("comment_count")
     val commentCount: Int,
 
+    // ИЗМЕНИТЬ: Принимаем Int или Any, затем конвертируем в Boolean
     @SerializedName("is_approved")
-    val isApproved: Boolean?,
-
+    private val _isApproved: Any? = null, // Принимаем Any для гибкости
 
     val userVote: Int = 0,
     val isOwner: Boolean = false
-)
+) {
+    // Helper property для получения Boolean значения
+    val isApproved: Boolean
+        get() = when (_isApproved) {
+            is Boolean -> _isApproved
+            is Int -> _isApproved == 1
+            is Number -> _isApproved.toInt() == 1
+            is String -> _isApproved == "true" || _isApproved == "1"
+            else -> true // По умолчанию считаем одобренным
+        }
+}
 
 data class Comment(
     val id: Int,
@@ -101,10 +111,10 @@ data class CommunityResponse<T>(
     val status: String,
     val message: String,
     val data: T? = null,
-    val categories: List<Category>? = null,    // Для /community/categories
-    val posts: List<Post>? = null,            // Для /community/posts
-    val post: Post? = null,                   // Для /community/posts/{id}
-    val comments: List<Comment>? = null,      // Для /community/posts/{id}/comments
+    val categories: List<Category>? = null,    // Для обратной совместимости
+    val posts: List<Post>? = null,            // Для обратной совместимости
+    val post: Post? = null,                   // Для обратной совместимости
+    val comments: List<Comment>? = null,      // Для обратной совместимости
     val pagination: PaginationData? = null    // Для пагинации
 )
 
