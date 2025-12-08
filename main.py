@@ -10,7 +10,7 @@ import api
 import aiohttp
 import asyncio
 from compatibility import *
-# Убрали повторный импорт datetime и pymysql
+
 from fastapi import Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 import secrets
@@ -118,27 +118,27 @@ class CategoryCreate(BaseModel):
     description: str
 
 
-# Измененная модель PostCreate - добавляем логин и пароль
+
 class PostCreate(BaseModel):
     title: str
     content: str
     category_id: int
-    login: str  # добавляем логин
-    password: str  # добавляем пароль
+    login: str
+    password: str
 
 
 class CommentCreate(BaseModel):
     content: str
     post_id: int
     parent_comment_id: Optional[int] = None
-    login: str  # добавляем логин
-    password: str  # добавляем пароль
+    login: str
+    password: str
 
 
 class VoteRequest(BaseModel):
     vote_type: int
-    login: str  # добавляем логин
-    password: str  # добавляем пароль
+    login: str
+    password: str
 
 
 class SubscriptionRequest(BaseModel):
@@ -166,7 +166,6 @@ def get_connection():
 
 
 def verify_user(login: str, password: str):
-    """Проверяет существование пользователя и возвращает его ID"""
     try:
         conn = get_connection()
         cursor = conn.cursor()
@@ -178,7 +177,7 @@ def verify_user(login: str, password: str):
         user = cursor.fetchone()
 
         if user:
-            return user[0]  # Возвращаем ID пользователя
+            return user[0]
         return None
 
     except Exception as e:
@@ -186,7 +185,7 @@ def verify_user(login: str, password: str):
         return None
 
 
-# Простая функция для получения текущего пользователя (заглушка)
+
 async def get_current_user():
 
 
@@ -476,15 +475,12 @@ async def delete_user(data: DeleteUserRequest):
         raise HTTPException(status_code=500, detail=f"Ошибка сервера: {str(e)}")
 
 
-# ========== COMMUNITY ENDPOINTS ==========
-
 @app.get("/community/categories")
 async def get_categories():
     try:
         conn = get_connection()
         cursor = conn.cursor()
 
-        # Сначала проверяем, существуют ли таблицы
         cursor.execute("SHOW TABLES LIKE 'Categories'")
         if not cursor.fetchone():
             return {
@@ -531,7 +527,7 @@ async def create_category(category: CategoryCreate):
         conn = get_connection()
         cursor = conn.cursor()
 
-        # Исправленный SQL запрос - убрали лишний параметр
+
         cursor.execute("""
             INSERT INTO Categories (name, description) 
             VALUES (%s, %s)
@@ -566,11 +562,10 @@ async def get_posts(category_id: Optional[int] = None,
         conn = get_connection()
         cursor = conn.cursor()
 
-        # Проверяем существование таблицы posts
         cursor.execute("SHOW TABLES LIKE 'posts'")
         if not cursor.fetchone():
             return {
-                "status": "False",  # Изменено на строку
+                "status": "False",
                 "message": "Таблица постов не создана",
                 "posts": [],
                 "pagination": {
@@ -593,7 +588,7 @@ async def get_posts(category_id: Optional[int] = None,
         total_posts = cursor.fetchone()[0]
         total_pages = (total_posts + limit - 1) // limit if total_posts > 0 else 0
 
-
+        # Основной запрос с фиксом
         query = """
             SELECT 
                 p.id, 
@@ -612,25 +607,24 @@ async def get_posts(category_id: Optional[int] = None,
             FROM posts p
             JOIN Users u ON p.user_id = u.id_user
             JOIN Categories c ON p.category_id = c.id
-            
-            ORDER BY {order_by}
-            LIMIT %s OFFSET %s
+            WHERE (p.is_approved = 1 OR p.is_approved IS NULL)
         """
 
         params = []
-        category_filter = ""
 
         if category_id:
-            category_filter = "AND p.category_id = %s"
+            query += " AND p.category_id = %s"
             params.append(category_id)
 
-        query = query.format(category_filter=category_filter, order_by=order_by)
+        query += f" ORDER BY {order_by}"
+        query += " LIMIT %s OFFSET %s"
+
         params.extend([limit, offset])
 
         cursor.execute(query, params)
         posts = cursor.fetchall()
 
-
+        # Форматирование результатов
         formatted_posts = []
         for post in posts:
             formatted_posts.append({
@@ -648,12 +642,12 @@ async def get_posts(category_id: Optional[int] = None,
                 "author_name": post[11] or "Неизвестный",
                 "category_name": post[12] or "Без категории"
             })
-        print(formatted_posts)
+
         cursor.close()
         conn.close()
 
         return {
-            "status": "True",  # Изменено на строку
+            "status": "True",
             "message": f"Найдено {len(formatted_posts)} постов",
             "posts": formatted_posts,
             "pagination": {
@@ -667,7 +661,7 @@ async def get_posts(category_id: Optional[int] = None,
     except Exception as e:
         print(f"Ошибка базы данных: {e}")
         return {
-            "status": "False",  # Изменено на строку
+            "status": "False",
             "message": f"Ошибка сервера: {str(e)}",
             "posts": [],
             "pagination": {
@@ -678,10 +672,8 @@ async def get_posts(category_id: Optional[int] = None,
             }
         }
 
-
 @app.get("/community/posts/{post_id}")
 async def get_post(post_id: int):
-    """Получить конкретный пост по ID"""
     try:
         conn = get_connection()
         cursor = conn.cursor()
@@ -733,9 +725,7 @@ async def get_post(post_id: int):
 
 @app.post("/community/posts")
 async def create_post(post: PostCreate):
-    """Создать новый пост"""
     try:
-        # Проверяем пользователя
         user_id = verify_user(post.login, post.password)
         if not user_id:
             return {
@@ -746,7 +736,6 @@ async def create_post(post: PostCreate):
         conn = get_connection()
         cursor = conn.cursor()
 
-        # Проверяем существование категории
         cursor.execute("SELECT id FROM Categories WHERE id = %s AND (is_active = TRUE OR is_active IS NULL)",
                        (post.category_id,))
         category = cursor.fetchone()
@@ -775,9 +764,7 @@ async def create_post(post: PostCreate):
 
 @app.post("/community/comments")
 async def create_comment(comment: CommentCreate):
-    """Добавить комментарий"""
     try:
-        # Проверяем пользователя
         user_id = verify_user(comment.login, comment.password)
         if not user_id:
             return {
@@ -788,7 +775,6 @@ async def create_comment(comment: CommentCreate):
         conn = get_connection()
         cursor = conn.cursor()
 
-        # Проверяем существование поста
         cursor.execute("SELECT id FROM Posts WHERE id = %s", (comment.post_id,))
         post = cursor.fetchone()
 
@@ -798,7 +784,6 @@ async def create_comment(comment: CommentCreate):
                 "message": "Пост не найден"
             }
 
-        # Проверяем родительский комментарий, если указан
         if comment.parent_comment_id:
             cursor.execute("SELECT id FROM Comments WHERE id = %s AND post_id = %s",
                            (comment.parent_comment_id, comment.post_id))
@@ -816,13 +801,11 @@ async def create_comment(comment: CommentCreate):
 
         comment_id = cursor.lastrowid
 
-        # Обновляем счетчик комментариев в посте
         cursor.execute("""
             UPDATE Posts SET comment_count = COALESCE(comment_count, 0) + 1 
             WHERE id = %s
         """, (comment.post_id,))
 
-        # Получаем информацию о созданном комментарии
         cursor.execute("""
             SELECT c.id, c.content, c.user_id, c.parent_comment_id, 
                    c.created_at, c.upvotes, c.downvotes,
@@ -858,9 +841,7 @@ async def create_comment(comment: CommentCreate):
 async def vote(vote_req: VoteRequest,
                post_id: Optional[int] = None,
                comment_id: Optional[int] = None):
-    """Голосование за пост или комментарий"""
     try:
-        # Проверяем пользователя
         user_id = verify_user(vote_req.login, vote_req.password)
         if not user_id:
             return {
@@ -884,7 +865,6 @@ async def vote(vote_req: VoteRequest,
         cursor = conn.cursor()
 
         if post_id:
-            # Проверяем существование поста
             cursor.execute("SELECT id FROM Posts WHERE id = %s", (post_id,))
             post = cursor.fetchone()
             if not post:
@@ -893,14 +873,12 @@ async def vote(vote_req: VoteRequest,
                     "message": "Пост не найден"
                 }
 
-            # Голосование за пост
             if vote_req.vote_type == 1:
                 cursor.execute("UPDATE Posts SET upvotes = COALESCE(upvotes, 0) + 1 WHERE id = %s", (post_id,))
             else:
                 cursor.execute("UPDATE Posts SET downvotes = COALESCE(downvotes, 0) + 1 WHERE id = %s", (post_id,))
 
         elif comment_id:
-            # Проверяем существование комментария
             cursor.execute("SELECT id FROM Comments WHERE id = %s", (comment_id,))
             comment = cursor.fetchone()
             if not comment:
@@ -909,7 +887,6 @@ async def vote(vote_req: VoteRequest,
                     "message": "Комментарий не найден"
                 }
 
-            # Голосование за комментарий
             if vote_req.vote_type == 1:
                 cursor.execute("UPDATE Comments SET upvotes = COALESCE(upvotes, 0) + 1 WHERE id = %s", (comment_id,))
             else:
@@ -928,9 +905,7 @@ async def vote(vote_req: VoteRequest,
 
 @app.post("/community/subscribe/{category_id}")
 async def subscribe(category_id: int, request: SubscriptionRequest):
-    """Подписаться на категорию"""
     try:
-        # Проверяем пользователя
         user_id = verify_user(request.login, request.password)
         if not user_id:
             return {
@@ -941,7 +916,6 @@ async def subscribe(category_id: int, request: SubscriptionRequest):
         conn = get_connection()
         cursor = conn.cursor()
 
-        # Проверяем существование категории
         cursor.execute("SELECT id FROM Categories WHERE id = %s", (category_id,))
         category = cursor.fetchone()
 
@@ -951,7 +925,6 @@ async def subscribe(category_id: int, request: SubscriptionRequest):
                 "message": "Категория не найдена"
             }
 
-        # Упрощенная логика подписки
         return {
             "status": "True",
             "message": "Подписка оформлена"
@@ -964,14 +937,12 @@ async def subscribe(category_id: int, request: SubscriptionRequest):
 
 @app.get("/community/posts/{post_id}/comments")
 async def get_comments(post_id: int, page: int = 1, limit: int = 50):
-    """Получить комментарии к посту"""
     try:
         offset = (page - 1) * limit
 
         conn = get_connection()
         cursor = conn.cursor()
 
-        # Проверяем существование поста
         cursor.execute("SELECT id FROM Posts WHERE id = %s", (post_id,))
         post = cursor.fetchone()
 
@@ -981,7 +952,6 @@ async def get_comments(post_id: int, page: int = 1, limit: int = 50):
                 "message": "Пост не найден"
             }
 
-        # Получаем общее количество комментариев
         cursor.execute("""
             SELECT COUNT(*) FROM Comments 
             WHERE post_id = %s
@@ -989,7 +959,6 @@ async def get_comments(post_id: int, page: int = 1, limit: int = 50):
         total_comments = cursor.fetchone()[0]
         total_pages = (total_comments + limit - 1) // limit if total_comments > 0 else 0
 
-        # Получаем комментарии с информацией об авторе
         cursor.execute("""
             SELECT c.id, c.content, c.user_id, c.parent_comment_id, 
                    c.created_at, c.upvotes, c.downvotes,
@@ -1003,7 +972,6 @@ async def get_comments(post_id: int, page: int = 1, limit: int = 50):
 
         comments = cursor.fetchall()
 
-        # Преобразуем плоский список в древовидную структуру
         comments_dict = {}
         root_comments = []
 
@@ -1021,7 +989,6 @@ async def get_comments(post_id: int, page: int = 1, limit: int = 50):
                 "replies": []
             }
 
-        # Строим дерево комментариев
         for comment_id, comment_data in comments_dict.items():
             parent_id = comment_data["parent_comment_id"]
             if parent_id is None:
@@ -1054,7 +1021,6 @@ async def get_comments(post_id: int, page: int = 1, limit: int = 50):
                 "total_pages": 0
             }
         }
-
 
 if __name__ == "__main__":
     import uvicorn

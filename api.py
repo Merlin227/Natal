@@ -29,9 +29,7 @@ async def get_all_horoscopes_async():
 
 
 async def translate_text_async(text):
-    """Асинхронная обертка для синхронного переводчика"""
     try:
-        # Запускаем в отдельном потоке чтобы не блокировать event loop
         loop = asyncio.get_event_loop()
         translated = await loop.run_in_executor(
             None,
@@ -45,11 +43,10 @@ async def translate_text_async(text):
 
 
 async def translate_all_texts_async(description):
-    """Параллельный перевод всех текстов"""
+
     zodiac_signs = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
                     'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces']
 
-    # Собираем тексты для перевода
     texts_to_translate = []
     for sign in zodiac_signs:
         try:
@@ -58,7 +55,6 @@ async def translate_all_texts_async(description):
         except (KeyError, TypeError):
             texts_to_translate.append("Horoscope not available")
 
-    # Параллельный перевод
     tasks = [translate_text_async(text) for text in texts_to_translate]
     translated_texts = await asyncio.gather(*tasks)
 
