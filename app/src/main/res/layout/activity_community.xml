@@ -53,19 +53,22 @@
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
             android:background="@drawable/spinner_background"
-            android:padding="12dp"/>
+            android:padding="12dp"
+            style="@style/CustomSpinnerStyle"
+            android:popupTheme="@style/CustomSpinnerDropDownItem"/>
 
         <Spinner
             android:id="@+id/sortSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:background="@drawable/spinner_background"
-            android:padding="12dp"/>
+            android:background="#FFFFFF"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:popupBackground="#FFFFFF" />
 
     </LinearLayout>
 
-    <!-- Кнопка создания поста -->
     <Button
         android:id="@+id/createPostButton"
         android:layout_width="match_parent"
