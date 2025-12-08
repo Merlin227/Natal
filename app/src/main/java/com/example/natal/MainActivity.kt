@@ -104,10 +104,7 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-data class UserData(
-    val Name: String,
-    val Password: String
-)
+
 
 data class ApiResponse(
     val status: String,

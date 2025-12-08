@@ -7,23 +7,22 @@
     android:background="@drawable/bg_gradient"
     tools:context=".FirstActivity">
 
-
-    <Button
-        android:id="@+id/communityButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!-- Иконка профиля в верхнем левом углу -->
+    <ImageButton
+        android:id="@+id/profileButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/rounded_button"
         android:backgroundTint="#FFFFFF"
-        android:fontFamily="sans-serif-black"
-        android:text="Сообщество"
-        android:textColor="#000000"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.468"
+        android:scaleType="center"
+        android:src="@drawable/ic_profile"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.612"
-        tools:ignore="MissingConstraints" />
+        android:contentDescription="Профиль" />
+
 
     <ImageButton
         android:id="@+id/buttonExit"
@@ -49,6 +48,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.106"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/communityButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
+        android:fontFamily="sans-serif-black"
+        android:text="Сообщество"
+        android:textColor="#000000"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.468"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.612"
         tools:ignore="MissingConstraints" />
 
     <Button

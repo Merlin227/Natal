@@ -24,6 +24,14 @@ class FirstActivity : AppCompatActivity() {
         val compatibility = findViewById<Button>(R.id.button3)
         val exitButton = findViewById<ImageButton>(R.id.buttonExit)
         val communityButton = findViewById<Button>(R.id.communityButton)
+        val profileButton = findViewById<ImageButton>(R.id.profileButton) // Новая кнопка профиля
+
+        profileButton.setOnClickListener {
+            val intent = Intent(this@FirstActivity, ProfileActivity::class.java)
+            intent.putExtra("EXTRA_MESSAGE1", name)
+            intent.putExtra("EXTRA_MESSAGE2", password)
+            startActivity(intent)
+        }
 
         communityButton.setOnClickListener {
             val intent = Intent(this@FirstActivity, CommunityActivity::class.java)
