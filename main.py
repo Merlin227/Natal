@@ -5,12 +5,12 @@ from pymysql.cursors import DictCursor
 import pymysql as mdb
 from nat_map import *
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Any
 import api
 import aiohttp
 import asyncio
 from compatibility import *
-
+from typing import Optional
 from fastapi import Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 import secrets
@@ -27,6 +27,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+class ProfileUpdate(BaseModel):
+    login: str
+    password: str
+    new_password: Optional[str] = None
+    city_name: Optional[str] = None
+    date_birth: Optional[str] = None
+    time_birth: Optional[str] = None
 
 class CompatibilityResult(BaseModel):
     percentage: int
@@ -144,6 +151,11 @@ class VoteRequest(BaseModel):
 class SubscriptionRequest(BaseModel):
     login: str
     password: str
+
+class BaseResponse(BaseModel):
+    status: str
+    message: str
+    data: Optional[Any] = None
 
 initial_categories = [
     ("Астрология для начинающих", "Основы астрологии"),
@@ -486,7 +498,7 @@ async def get_categories():
             return {
                 "status": "True",
                 "message": "Таблица категорий не создана",
-                "categories": []
+                "data": []  # Используем data вместо categories
             }
 
         cursor.execute("""
@@ -498,27 +510,82 @@ async def get_categories():
         """)
         categories = cursor.fetchall()
 
-        return {
-            "status": "True",
-            "message": f"Найдено {len(categories)} категорий",
-            "categories": [
-                {
-                    "id": c[0],
-                    "name": c[1],
-                    "description": c[2],
-                    "subscribers": c[3]
-                }
-                for c in categories
-            ]
-        }
+        categories_list = [
+            {
+                "id": c[0],
+                "name": c[1],
+                "description": c[2],
+                "subscribers": c[3]
+            }
+            for c in categories
+        ]
+
+        return BaseResponse(
+            status="True",
+            message=f"Найдено {len(categories_list)} категорий",
+            data=categories_list  # Используем data
+        )
 
     except Exception as e:
         print(f"Ошибка при получении категорий: {e}")
-        return {
-            "status": "False",
-            "message": f"Ошибка сервера: {str(e)}",
-            "categories": []
+        return BaseResponse(
+            status="False",
+            message=f"Ошибка сервера: {str(e)}",
+            data=[]
+        )
+
+
+@app.get("/community/posts/{post_id}", response_model=BaseResponse)
+async def get_post(post_id: int):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT p.id, p.title, p.content, p.user_id, p.category_id, 
+                   p.created_at, p.updated_at, p.comment_count, p.is_approved,
+                   u.login as author_name, c.name as category_name,
+                   COALESCE((SELECT COUNT(*) FROM Votes WHERE post_id = p.id AND vote_type = 1), 0) as upvotes,
+                   COALESCE((SELECT COUNT(*) FROM Votes WHERE post_id = p.id AND vote_type = -1), 0) as downvotes
+            FROM Posts p
+            JOIN Users u ON p.user_id = u.id_user
+            JOIN Categories c ON p.category_id = c.id
+            WHERE p.id = %s AND (p.is_approved = TRUE OR p.is_approved IS NULL)
+        """, (post_id,))
+
+        post = cursor.fetchone()
+
+        if not post:
+            return {
+                "status": "False",
+                "message": "Пост не найден или не одобрен"
+            }
+
+        post_data = {
+            "id": post[0],
+            "title": post[1],
+            "content": post[2],
+            "user_id": post[3],
+            "category_id": post[4],
+            "created_at": post[5].strftime("%Y-%m-%d %H:%M:%S") if post[5] else None,
+            "updated_at": post[6].strftime("%Y-%m-%d %H:%M:%S") if post[6] else None,
+            "comment_count": post[7] if post[7] else 0,
+            "is_approved": post[8] if post[8] else True,
+            "author_name": post[9] if post[9] else "Неизвестный",
+            "category_name": post[10] if post[10] else "Без категории",
+            "upvotes": post[11] if post[11] else 0,
+            "downvotes": post[12] if post[12] else 0
         }
+
+        return BaseResponse(
+            status="True",
+            message="Пост найден",
+            data=post_data
+        )
+
+    except Exception as e:
+        print(f"Ошибка базы данных: {e}")
+        raise HTTPException(status_code=500, detail=f"Ошибка сервера: {str(e)}")
 
 
 @app.post("/community/categories")
@@ -671,56 +738,6 @@ async def get_posts(category_id: Optional[int] = None,
                 "total_pages": 0
             }
         }
-
-@app.get("/community/posts/{post_id}")
-async def get_post(post_id: int):
-    try:
-        conn = get_connection()
-        cursor = conn.cursor()
-
-        cursor.execute("""
-            SELECT p.id, p.title, p.content, p.user_id, p.category_id, 
-                   p.created_at, p.updated_at, p.comment_count, p.is_approved,
-                   u.login as author_name, c.name as category_name,
-                   COALESCE((SELECT COUNT(*) FROM Votes WHERE post_id = p.id AND vote_type = 1), 0) as upvotes,
-                   COALESCE((SELECT COUNT(*) FROM Votes WHERE post_id = p.id AND vote_type = -1), 0) as downvotes
-            FROM Posts p
-            JOIN Users u ON p.user_id = u.id_user
-            JOIN Categories c ON p.category_id = c.id
-            WHERE p.id = %s AND (p.is_approved = TRUE OR p.is_approved IS NULL)
-        """, (post_id,))
-
-        post = cursor.fetchone()
-        print(post)
-        if not post:
-            return {
-                "status": "False",
-                "message": "Пост не найден или не одобрен"
-            }
-
-        return {
-            "status": "True",
-            "message": "Пост найден",
-            "post": {
-                "id": post[0],
-                "title": post[1],
-                "content": post[2],
-                "user_id": post[3],
-                "category_id": post[4],
-                "created_at": post[5].strftime("%Y-%m-%d %H:%M:%S") if post[5] else None,
-                "updated_at": post[6].strftime("%Y-%m-%d %H:%M:%S") if post[6] else None,
-                "comment_count": post[7] if post[7] else 0,
-                "is_approved": post[8] if post[8] else True,
-                "author_name": post[9] if post[9] else "Неизвестный",
-                "category_name": post[10] if post[10] else "Без категории",
-                "upvotes": post[11] if post[11] else 0,
-                "downvotes": post[12] if post[12] else 0
-            }
-        }
-
-    except Exception as e:
-        print(f"Ошибка базы данных: {e}")
-        raise HTTPException(status_code=500, detail=f"Ошибка сервера: {str(e)}")
 
 
 @app.post("/community/posts")
@@ -1020,6 +1037,180 @@ async def get_comments(post_id: int, page: int = 1, limit: int = 50):
                 "total_comments": 0,
                 "total_pages": 0
             }
+        }
+
+
+class ProfileUpdate(BaseModel):
+    login: str
+    password: str
+    new_password: Optional[str] = None
+    city_name: Optional[str] = None
+    date_birth: Optional[str] = None
+    time_birth: Optional[str] = None
+
+
+@app.post("/user/profile")
+async def get_user_profile(data: UserData):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        print(f"Запрос профиля для пользователя: {data.Name}")
+
+        cursor.execute("""
+            SELECT 
+                u.id_user, 
+                u.login, 
+                u.pass, 
+                DATE_FORMAT(u.date_birth, '%%Y-%%m-%%d') as date_birth,
+                TIME_FORMAT(u.time_birth, '%%H:%%i:%%s') as time_birth,
+                u.id_city,
+                c.name as city_name
+            FROM Users u
+            LEFT JOIN Cities c ON u.id_city = c.id_city
+            WHERE u.login = %s AND u.pass = %s
+        """, (data.Name, data.Password))
+
+        result = cursor.fetchone()
+
+        if result:
+            print(f"Найден пользователь: {result[1]}")
+
+            city_data = None
+            if result[5] and result[6]:
+                city_data = {
+                    "id": result[5],
+                    "name": result[6]
+                }
+
+            return {
+                "status": "True",
+                "message": "Данные профиля получены",
+                "profile": {
+                    "id_user": result[0],
+                    "login": result[1],
+                    "date_birth": result[3] if result[3] else "",
+                    "time_birth": result[4] if result[4] else "",
+                    "city": city_data
+                }
+            }
+        else:
+            print(f"Пользователь не найден: {data.Name}")
+            return {
+                "status": "False",
+                "message": "Пользователь не найден"
+            }
+
+    except Exception as e:
+        print(f"Ошибка базы данных при получении профиля: {e}")
+        return {
+            "status": "False",
+            "message": f"Ошибка сервера: {str(e)}"
+        }
+
+
+@app.post("/user/profile/update")
+async def update_user_profile(data: ProfileUpdate):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        print(f"Обновление профиля для пользователя: {data.login}")
+
+        # Проверяем существование пользователя
+        cursor.execute("SELECT id_user FROM Users WHERE login = %s AND pass = %s",
+                       (data.login, data.password))
+        user = cursor.fetchone()
+
+        if not user:
+            return {
+                "status": "False",
+                "message": "Неверные учетные данные"
+            }
+
+        user_id = user[0]
+
+        # Собираем обновления
+        updates = {}
+
+        if data.new_password:
+            updates['pass'] = data.new_password
+
+        if data.city_name:
+            cursor.execute("SELECT id_city FROM Cities WHERE name = %s", (data.city_name,))
+            city = cursor.fetchone()
+            if city:
+                updates['id_city'] = city[0]
+            else:
+                return {
+                    "status": "False",
+                    "message": f"Город '{data.city_name}' не найден"
+                }
+
+        if data.date_birth:
+            updates['date_birth'] = data.date_birth
+
+        if data.time_birth:
+            updates['time_birth'] = data.time_birth
+
+        if updates:
+            # Формируем SQL запрос
+            set_clause = ", ".join([f"`{key}` = %s" for key in updates.keys()])
+            sql = f"UPDATE Users SET {set_clause} WHERE id_user = %s"
+
+            params = list(updates.values())
+            params.append(user_id)
+
+            cursor.execute(sql, params)
+            conn.commit()
+
+            print(f"Профиль обновлен для user_id: {user_id}")
+            return {
+                "status": "True",
+                "message": "Профиль успешно обновлен"
+            }
+        else:
+            return {
+                "status": "False",
+                "message": "Нет данных для обновления"
+            }
+
+    except Exception as e:
+        print(f"Ошибка базы данных при обновлении профиля: {e}")
+        return {
+            "status": "False",
+            "message": f"Ошибка сервера: {str(e)}"
+        }
+
+
+@app.get("/cities")
+async def get_cities():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT id_city, name FROM Cities ORDER BY name")
+        cities = cursor.fetchall()
+
+        cities_list = []
+        for city in cities:
+            cities_list.append({
+                "id": city[0],
+                "name": city[1]
+            })
+
+        print(f"Отправлено городов: {len(cities_list)}")
+        return {
+            "status": "True",
+            "message": f"Найдено {len(cities_list)} городов",
+            "cities": cities_list
+        }
+
+    except Exception as e:
+        print(f"Ошибка базы данных при получении городов: {e}")
+        return {
+            "status": "False",
+            "message": f"Ошибка сервера: {str(e)}"
         }
 
 if __name__ == "__main__":
