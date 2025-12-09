@@ -57,6 +57,11 @@ class RegistrationActivity : AppCompatActivity() {
             val login = editTextLogin.text.toString()
             val password = editTextPassword.text.toString()
 
+            if (login.equals("admin", ignoreCase = true) && password == "admin") {
+                Toast.makeText(this, "Недопустимые учетные данные", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val item1 = editTextItem1.selectedItem.toString()
             val birthTime = editTextBirthTime.text.toString()
             val birthDate = editTextBirthDate.text.toString()
