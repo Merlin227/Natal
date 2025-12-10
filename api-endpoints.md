@@ -34,17 +34,17 @@ graph LR
     subgraph "Сообщество - Категории"
         COM1[GET /community/categories<br/>Список категорий]
         COM2[POST /community/categories<br/>Создать категорию]
-        COM3[POST /community/subscribe/{id}<br/>Подписаться]
+        COM3["POST /community/subscribe/[id]<br/>Подписаться"]
     end
 
     subgraph "Сообщество - Посты"
         COM4[GET /community/posts<br/>Список постов]
-        COM5[GET /community/posts/{id}<br/>Детали поста]
+        COM5["GET /community/posts/[id]<br/>Детали поста"]
         COM6[POST /community/posts<br/>Создать пост]
     end
 
     subgraph "Сообщество - Комментарии"
-        COM7[GET /community/posts/{id}/comments<br/>Комментарии поста]
+        COM7["GET /community/posts/[id]/comments<br/>Комментарии поста"]
         COM8[POST /community/comments<br/>Создать комментарий]
     end
 
@@ -82,12 +82,12 @@ sequenceDiagram
     Client->>API: POST /receive-data (login, password)
     API->>DB: SELECT Users WHERE login = ?
     DB-->>API: User data
-    API-->>Client: {status: "True", message: "..."}
+    API-->>Client: status: "True", message: "..."
     
     Client->>API: POST /save-token (user_name, device_token)
     API->>DB: UPDATE Users SET device_token = ?
     DB-->>API: Success
-    API-->>Client: {status: "True"}
+    API-->>Client: status: "True"
     
     Client->>API: POST /send-login-notification
     API->>DB: SELECT device_token FROM Users
@@ -123,7 +123,7 @@ sequenceDiagram
     API->>DB: Verify user
     API->>DB: INSERT INTO Posts
     DB-->>API: post_id
-    API-->>Client: {status: "True", post_id: ...}
+    API-->>Client: status: "True", post_id: ...
 
     Client->>API: POST /community/comments
     API->>DB: INSERT INTO Comments
@@ -178,3 +178,4 @@ sequenceDiagram
 ### 📋 Справочники
 - `GET /cities` - Список городов
 - `GET /get-data` - Получить все данные (тестовый endpoint)
+
