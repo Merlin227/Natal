@@ -72,8 +72,8 @@ class CommunityActivity : AppCompatActivity() {
 
 
         val sortOptions = arrayOf("Сначала новые", "Популярные", "Лучшие")
-        val sortAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, sortOptions)
-        sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val sortAdapter = ArrayAdapter(this, R.layout.spinner_item, sortOptions)
+        sortAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
         sortSpinner.adapter = sortAdapter
     }
 
@@ -180,8 +180,8 @@ class CommunityActivity : AppCompatActivity() {
                     categoryNames.addAll(categories.map { it.name })
 
                     val adapter = ArrayAdapter(this@CommunityActivity,
-                        android.R.layout.simple_spinner_item, categoryNames)
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        R.layout.spinner_item, categoryNames)
+                    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
                     categoriesSpinner.adapter = adapter
                 }
             }

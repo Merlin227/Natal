@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         val editTextPassword = findViewById<EditText>(R.id.editTextPassword)
         val sendButtonLogin = findViewById<Button>(R.id.loginButton)
         val registerButton = findViewById<Button>(R.id.registerButton)
+        val guestModeTextView = findViewById<android.widget.TextView>(R.id.guestModeTextView)
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://consciously-replete-ox.cloudpub.ru/")
@@ -132,6 +133,16 @@ class MainActivity : AppCompatActivity() {
         registerButton.setOnClickListener {
             try {
                 val intent = Intent(this@MainActivity, RegistrationActivity::class.java)
+                startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(this@MainActivity, "Ошибка: ${e.message}", Toast.LENGTH_LONG).show()
+                e.printStackTrace()
+            }
+        }
+
+        guestModeTextView.setOnClickListener {
+            try {
+                val intent = Intent(this@MainActivity, HoroscopeActivity::class.java)
                 startActivity(intent)
             } catch (e: Exception) {
                 Toast.makeText(this@MainActivity, "Ошибка: ${e.message}", Toast.LENGTH_LONG).show()

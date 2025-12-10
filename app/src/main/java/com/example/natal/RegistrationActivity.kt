@@ -125,9 +125,9 @@ class RegistrationActivity : AppCompatActivity() {
         val adapter = ArrayAdapter.createFromResource(
             this,
             R.array.spinner_items,
-            android.R.layout.simple_spinner_item
+            R.layout.spinner_item_dark
         )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_dark)
         spinner.adapter = adapter
     }
 

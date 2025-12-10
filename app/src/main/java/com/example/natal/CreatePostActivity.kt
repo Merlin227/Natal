@@ -73,8 +73,8 @@ class CreatePostActivity : AppCompatActivity() {
                     if (categories.isNotEmpty()) {
                         val categoryNames = categories.map { it.name }
                         val adapter = ArrayAdapter(this@CreatePostActivity,
-                            android.R.layout.simple_spinner_item, categoryNames)
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                            R.layout.spinner_item_dark, categoryNames)
+                        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_dark)
                         categorySpinner.adapter = adapter
                     } else {
                         Toast.makeText(this@CreatePostActivity, "Нет доступных категорий", Toast.LENGTH_SHORT).show()

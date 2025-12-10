@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
 import java.util.*
@@ -19,11 +18,6 @@ class CommentsAdapter(
         val author: TextView = itemView.findViewById(R.id.commentAuthor)
         val content: TextView = itemView.findViewById(R.id.commentContent)
         val time: TextView = itemView.findViewById(R.id.commentTime)
-        val upvotes: TextView = itemView.findViewById(R.id.commentUpvotes)
-        val downvotes: TextView = itemView.findViewById(R.id.commentDownvotes)
-        val upvoteButton: ImageButton = itemView.findViewById(R.id.commentUpvoteButton)
-        val downvoteButton: ImageButton = itemView.findViewById(R.id.commentDownvoteButton)
-        val replyButton: Button = itemView.findViewById(R.id.replyButton)
         val repliesContainer: LinearLayout = itemView.findViewById(R.id.repliesContainer)
     }
 
@@ -39,30 +33,6 @@ class CommentsAdapter(
         holder.author.text = comment.authorName
         holder.content.text = comment.content
         holder.time.text = formatTime(comment.createdAt)
-        holder.upvotes.text = comment.upvotes.toString()
-        holder.downvotes.text = comment.downvotes.toString()
-
-        // Проверяем, является ли текущий пользователь автором
-        val isOwner = comment.authorName == currentUsername
-
-        // Подсветка голосов
-        updateVoteButtons(holder, comment.userVote)
-
-        // Обработчики кликов
-        holder.upvoteButton.setOnClickListener {
-            // TODO: Реализовать голосование за комментарий
-            updateVoteButtons(holder, 1)
-        }
-
-        holder.downvoteButton.setOnClickListener {
-            // TODO: Реализовать голосование за комментарий
-            updateVoteButtons(holder, -1)
-        }
-
-        holder.replyButton.setOnClickListener {
-            // TODO: Реализовать ответ на комментарий
-            Toast.makeText(holder.itemView.context, "Ответить на комментарий", Toast.LENGTH_SHORT).show()
-        }
 
         // Отображаем ответы (рекурсивно)
         displayReplies(holder.repliesContainer, comment.replies)
@@ -95,28 +65,6 @@ class CommentsAdapter(
         }
     }
 
-    private fun updateVoteButtons(holder: CommentViewHolder, voteType: Int) {
-        val context = holder.itemView.context
-
-        when (voteType) {
-            1 -> {
-                // Upvote активен
-                holder.upvoteButton.setColorFilter(ContextCompat.getColor(context, R.color.upvote_active))
-                holder.downvoteButton.setColorFilter(ContextCompat.getColor(context, R.color.vote_inactive))
-            }
-            -1 -> {
-                // Downvote активен
-                holder.upvoteButton.setColorFilter(ContextCompat.getColor(context, R.color.vote_inactive))
-                holder.downvoteButton.setColorFilter(ContextCompat.getColor(context, R.color.downvote_active))
-            }
-            else -> {
-                // Нет голоса
-                holder.upvoteButton.setColorFilter(ContextCompat.getColor(context, R.color.vote_inactive))
-                holder.downvoteButton.setColorFilter(ContextCompat.getColor(context, R.color.vote_inactive))
-            }
-        }
-    }
-
     private fun displayReplies(container: LinearLayout, replies: List<Comment>) {
         // Очищаем контейнер
         container.removeAllViews()
@@ -137,52 +85,12 @@ class CommentsAdapter(
             val author: TextView = replyView.findViewById(R.id.commentAuthor)
             val content: TextView = replyView.findViewById(R.id.commentContent)
             val time: TextView = replyView.findViewById(R.id.commentTime)
-            val upvotes: TextView = replyView.findViewById(R.id.commentUpvotes)
-            val downvotes: TextView = replyView.findViewById(R.id.commentDownvotes)
-            val upvoteButton: ImageButton = replyView.findViewById(R.id.commentUpvoteButton)
-            val downvoteButton: ImageButton = replyView.findViewById(R.id.commentDownvoteButton)
-            val replyButton: Button = replyView.findViewById(R.id.replyButton)
             val repliesContainer: LinearLayout = replyView.findViewById(R.id.repliesContainer)
 
             // Заполняем данные
             author.text = reply.authorName
             content.text = reply.content
             time.text = formatTime(reply.createdAt)
-            upvotes.text = reply.upvotes.toString()
-            downvotes.text = reply.downvotes.toString()
-
-            // Проверяем, является ли текущий пользователь автором
-            val isOwner = reply.authorName == currentUsername
-
-            // Подсветка голосов
-            when (reply.userVote) {
-                1 -> {
-                    upvoteButton.setColorFilter(ContextCompat.getColor(container.context, R.color.upvote_active))
-                    downvoteButton.setColorFilter(ContextCompat.getColor(container.context, R.color.vote_inactive))
-                }
-                -1 -> {
-                    upvoteButton.setColorFilter(ContextCompat.getColor(container.context, R.color.vote_inactive))
-                    downvoteButton.setColorFilter(ContextCompat.getColor(container.context, R.color.downvote_active))
-                }
-                else -> {
-                    upvoteButton.setColorFilter(ContextCompat.getColor(container.context, R.color.vote_inactive))
-                    downvoteButton.setColorFilter(ContextCompat.getColor(container.context, R.color.vote_inactive))
-                }
-            }
-
-            // Скрываем кнопку ответа для вложенных комментариев
-            replyButton.visibility = View.GONE
-
-            // Обработчики кликов
-            upvoteButton.setOnClickListener {
-                // TODO: Реализовать голосование за ответ
-                updateVoteButtonsForView(replyView, 1)
-            }
-
-            downvoteButton.setOnClickListener {
-                // TODO: Реализовать голосование за ответ
-                updateVoteButtonsForView(replyView, -1)
-            }
 
             // Рекурсивно отображаем вложенные ответы
             displayReplies(repliesContainer, reply.replies)
@@ -192,23 +100,4 @@ class CommentsAdapter(
         }
     }
 
-    private fun updateVoteButtonsForView(view: View, voteType: Int) {
-        val upvoteButton: ImageButton = view.findViewById(R.id.commentUpvoteButton)
-        val downvoteButton: ImageButton = view.findViewById(R.id.commentDownvoteButton)
-
-        when (voteType) {
-            1 -> {
-                upvoteButton.setColorFilter(ContextCompat.getColor(view.context, R.color.upvote_active))
-                downvoteButton.setColorFilter(ContextCompat.getColor(view.context, R.color.vote_inactive))
-            }
-            -1 -> {
-                upvoteButton.setColorFilter(ContextCompat.getColor(view.context, R.color.vote_inactive))
-                downvoteButton.setColorFilter(ContextCompat.getColor(view.context, R.color.downvote_active))
-            }
-            else -> {
-                upvoteButton.setColorFilter(ContextCompat.getColor(view.context, R.color.vote_inactive))
-                downvoteButton.setColorFilter(ContextCompat.getColor(view.context, R.color.vote_inactive))
-            }
-        }
-    }
 }

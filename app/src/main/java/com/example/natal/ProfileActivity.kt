@@ -488,8 +488,8 @@ class ProfileActivity : AppCompatActivity() {
     private fun setupCitySpinner() {
         if (cities.isNotEmpty()) {
             val cityNames = cities.map { it.name }.toTypedArray()
-            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, cityNames)
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            val adapter = ArrayAdapter(this, R.layout.spinner_item_dark, cityNames)
+            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_dark)
             profileCity.adapter = adapter
 
             profileCity.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {

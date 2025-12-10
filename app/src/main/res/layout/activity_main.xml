@@ -9,18 +9,7 @@
     android:padding="24dp"
     tools:context=".MainActivity">
 
-    <!-- Градиентный фон (создайте файл bg_gradient.xml в drawable) -->
-    <!--
-    <shape xmlns:android="http://schemas.android.com/apk/res/android">
-        <gradient
-            android:startColor="#0F0C29"
-            android:centerColor="#302B63"
-            android:endColor="#24243E"
-            android:angle="135"/>
-    </shape>
-    -->
 
-    <!-- Заголовок -->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="0dp"
@@ -142,9 +131,10 @@
 
     <!-- Разделитель -->
     <TextView
+        android:id="@+id/orDivider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="24dp"
+        android:layout_marginTop="24dp"
         android:text="или"
         android:textColor="#80FFFFFF"
         android:textSize="14sp"
@@ -152,9 +142,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginButton" />
 
+    <!-- Гостевой режим -->
+
     <!-- Кнопка регистрации -->
 
     <!-- Ссылка "Забыли пароль?" -->
+
+    <TextView
+        android:id="@+id/guestModeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="180dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="12dp"
+        android:text="гостевой режим"
+        android:textColor="#B3FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/orDivider" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/registerButton"
@@ -173,11 +182,10 @@
         app:iconPadding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.628" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
